@@ -1,0 +1,45 @@
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  background: #DA4453; 
+  background: -webkit-linear-gradient(to right, #89216B, #DA4453); 
+  background: linear-gradient(to right, #89216B, #DA4453);
+  overflow-x: hidden;
+  font-family: "Acumin Regular";
+  color: white;
+  box-sizing: border-box;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.app {
+  text-align: center;
+  background: #DA4453; 
+  background: -webkit-linear-gradient(to right, #89216B, #DA4453); 
+  background: linear-gradient(to right, #89216B, #DA4453);
+}
+
+.app__title {
+  font-family: "Monument Bold";
+  color: white;
+  font-size: 3.5rem;
+  margin-top: 0;
+  margin-bottom: 0
+}
+
+.app__subtitle {
+  font-family: "Monument Light";
+}
+
+.highlight {
+  color: yellow
+}

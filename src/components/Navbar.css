@@ -1,0 +1,17 @@
+.navbar {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem;
+  padding-right: 0;
+  z-index: 100;
+}
+
+.navbar__item {
+  margin: 0 1rem;
+}
+
+.navbar__item-last {
+  margin-right: 0;
+}

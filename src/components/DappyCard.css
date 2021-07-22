@@ -1,0 +1,56 @@
+.dappy-card__border {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+
+.dappy-card__wrapper {
+  max-width: 15rem;
+  min-width: 15rem;
+  background: transparent;
+  margin: 1rem;
+  padding-top: 1rem;
+  border-radius: 5px;
+  position: relative
+}
+
+.dappy-card__image {
+  margin-bottom: 0;
+  width: 50%;
+  cursor: pointer;
+}
+
+.dappy-card__image:hover {
+  animation: tada;
+  animation-duration: .8s;
+}
+
+.dappy-card__title {
+  margin: 0;
+  font-family: "Monument Regular";
+  font-size: 1.3rem;
+}
+
+.dappy-card__info {
+ font-family: "Monument Light"
+}
+
+.faded {
+  opacity: .5;
+}
+
+.collected {
+  position: absolute;
+  top: 5.5rem;
+  left: 4.2rem;
+  color: black;
+  background-color: white;
+  padding: 1rem;
+  transform: rotate(-15deg);
+  mix-blend-mode: screen; /* This makes the cutout text possible */
+  font-family: "Monument Bold";
+  box-shadow: .5rem .5rem 1rem rgba(0,0,0,.5);
+}
+
+.img-large {
+  width: 100% !important;
+}

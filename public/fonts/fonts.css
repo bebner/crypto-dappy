@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'Monument Regular';
+  src: local('Monument Regular'), url("/fonts/MonumentExtended-Regular.woff") format('woff');
+}
+
+@font-face {
+  font-family: 'Monument Bold';
+  src: local('Monument Bold'), url("/fonts/MonumentExtended-Bold.woff") format('woff');
+}
+
+@font-face {
+  font-family: 'Monument Light';
+  src: local('Monument Light'), url("/fonts/MonumentExtended-Light.woff") format('woff');
+}
+
+@font-face {
+  font-family: 'Acumin Regular';
+  src: local('Acumin Regular'), url("/fonts/Acumin-RPro.otf") format('opentype');
+}
+
+@font-face {
+  font-family: 'Acumin Bold';
+  src: local('Acumin Bold'), url("/fonts/Acumin-BdPro.otf") format('opentype');
+}
+
+@font-face {
+  font-family: 'Acumin Italic';
+  src: local('Acumin Italic'), url("/fonts/Acumin-ItPro.otf") format('opentype');
+}

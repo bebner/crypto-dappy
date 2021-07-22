@@ -1,0 +1,9 @@
+.dappy-list__wrapper {
+  margin: 5rem auto;
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+}

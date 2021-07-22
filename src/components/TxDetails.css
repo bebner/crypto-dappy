@@ -1,0 +1,26 @@
+.tx__wrapper {
+  background: white;
+  position: relative;
+  color: black;
+  width: 20rem;
+  text-align: left;
+  padding: 0.25rem 1rem;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.tx__loader {
+  font-size: 2rem;
+  padding-right: .75rem;
+}
+
+.txs__list {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 120;
+}

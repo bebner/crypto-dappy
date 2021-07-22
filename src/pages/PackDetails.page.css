@@ -1,0 +1,21 @@
+.pack__img {
+  width: 15rem;
+}
+
+.pack__img:hover {
+  animation: tada;
+  animation-duration: 1s;
+}
+
+.packdetails__wrapper {
+  margin-top: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.pack__content {
+  margin-top: 2rem;
+  margin-left: 2rem;
+  text-align: left;
+}

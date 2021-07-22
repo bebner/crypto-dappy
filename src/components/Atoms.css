@@ -1,0 +1,50 @@
+.btn {
+  font-family: "Monument Bold";
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.btn-bg {
+  background: white;
+  padding: 0.5rem 1rem;
+  mix-blend-mode: screen; /* This makes the cutout text possible */
+  color: black;
+}
+
+.btn-bordered {
+  border: 2px solid white;
+}
+
+.btn-light {
+  font-family: "Monument Bold" !important;
+}
+
+.btn:hover, btn-bg:hover {
+  transform: scale(1.05);
+}
+
+.btn-small {
+  font-size: .8rem;
+  text-align: left;
+}
+
+.btn-dappy {
+  width: 60%;
+  margin: 0 auto;
+  display: flex; 
+  justify-content: center;
+}
+
+.btn-icon {
+  font-size: 1.2rem; 
+  margin-right: .2rem
+}
+
+.rounded {
+  border-radius: 150px;
+}
+
+.wiggling:hover {
+  animation: tada;
+  animation-duration: 1s;
+}

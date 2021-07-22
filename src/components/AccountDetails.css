@@ -1,0 +1,11 @@
+.wallet__popup {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+}
+
+.wallet__item {
+  font-family: 'Monument Light';
+  font-size: .8rem;
+  text-align: left;
+}
