@@ -7,8 +7,6 @@ export default function useCurrentUser() {
   const tools = {
     logIn: fcl.authenticate,
     logOut: fcl.unauthenticate,
-    signUp: fcl.signUp,
-    changeUser: fcl.reauthenticate,
   }
 
   useEffect(() => {
