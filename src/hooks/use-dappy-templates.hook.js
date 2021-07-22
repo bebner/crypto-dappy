@@ -1,9 +1,7 @@
 import { useEffect, useReducer } from 'react'
-import { query } from '@onflow/fcl'
-
-import { LIST_DAPPY_TEMPLATES } from '../flow/list-dappy-templates.script'
 import { defaultReducer } from '../reducer/defaultReducer'
 import DappyClass from '../utils/DappyClass'
+import { DEFAULT_DAPPIES } from '../config/dappies.config'
 
 export default function useDappyTemplates() {
   const [state, dispatch] = useReducer(defaultReducer, { loading: false, error: false, data: [] })
@@ -12,7 +10,7 @@ export default function useDappyTemplates() {
     const fetchDappyTemplates = async () => {
       dispatch({ type: 'PROCESSING' })
       try {
-        let res = await query({ cadence: LIST_DAPPY_TEMPLATES })
+        let res = DEFAULT_DAPPIES
         let mappedDappies = Object.values(res).map(d => {
           return new DappyClass(d?.templateID, d?.dna, d?.name, d?.price)
         })

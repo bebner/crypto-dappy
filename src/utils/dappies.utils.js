@@ -104,7 +104,6 @@ export const createThemedDNA = (rarity, theme) => {
 
 export const generateDappies = (dappies = DEFAULT_DAPPIES) => {
   const generatedDappies = dappies.map(d => {
-    console.log(calculatePrice(d.dna))
     return new DappyClass(d.id, d.dna, d.name, calculatePrice(d.dna.length), 1)
   })
   return generatedDappies
