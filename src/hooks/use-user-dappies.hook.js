@@ -3,7 +3,7 @@ import { userDappyReducer } from '../reducer/userDappyReducer'
 import DappyClass from '../utils/DappyClass'
 import { DEFAULT_DAPPIES } from '../config/dappies.config'
 
-export default function useUserDappies(user, collection, getFUSDBalance) {
+export default function useUserDappies() {
   const [state, dispatch] = useReducer(userDappyReducer, {
     oading: false,
     error: false,

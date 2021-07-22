@@ -1,4 +1,3 @@
-import DappyClass from "./DappyClass";
 import faker from "faker"
 import Please from "pleasejs"
 import { COMMON, DAPPY_RARITY_DISTRIBUTION, DEFAULT_DAPPIES, RARE, ULTRARARE } from "../config/dappies.config";
@@ -104,7 +103,12 @@ export const createThemedDNA = (rarity, theme) => {
 
 export const generateDappies = (dappies = DEFAULT_DAPPIES) => {
   const generatedDappies = dappies.map(d => {
-    return new DappyClass(d.id, d.dna, d.name, calculatePrice(d.dna.length), 1)
+    return {
+      templateID: d?.templateID,
+      dna: d?.dna,
+      name: d?.name,
+      price: calculatePrice(d?.dna?.length)
+    }
   })
   return generatedDappies
 }
