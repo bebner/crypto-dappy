@@ -1,30 +1,26 @@
 export const DEFAULT_PACKS = [
   {
-    name: "Rare Pack",
-    image: process.env.PUBLIC_URL + '/assets/Pack1.png',
-    rarity: "🌿 Rare",
-    quantity: 5,
-    price: 75,
-    id: 101,
-    type: "Pack"
+    name: "Pride Dappies",
+    price: "50.00000000",
+    familyID: 1,
+    type: "Pack",
+    lazy: {},
+    templates: [1, 2, 3, 4]
   },
   {
-    name: "Common Pack",
-    image: process.env.PUBLIC_URL + '/assets/Pack2.png',
-    rarity: "🧱 Common",
-    quantity: 5,
-    price: 40,
-    id: 102,
-    type: "Pack"
+    name: "Green Dappies",
+    price: "30.00000000",
+    familyID: 2,
+    type: "Pack",
+    lazy: {},
+    templates: [5, 6, 7, 8]
   },
   {
-    name: "Ultrarare Pack",
-    image: process.env.PUBLIC_URL + '/assets/Pack3.png',
-    rarity: "💎 Ultrarare",
-    quantity: 5,
-    price: 140,
-    id: 103,
-    type: "Pack"
+    name: "Yellow Dappies",
+    price: "140.00000000",
+    familyID: 3,
+    type: "Pack",
+    lazy: {},
+    templates: [9, 10, 11, 12]
   },
-
 ]
