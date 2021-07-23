@@ -5,7 +5,7 @@ import { useUser } from '../providers/UserProvider'
 import Dappy from './Dappy'
 import "./DappyCard.css"
 
-export default function DappyCard({ dappy, store }) {
+export default function DappyCard({ dappy, store, designer }) {
   const { userDappies, mintDappy } = useUser()
   const history = useHistory()
   const { id, dna, image, name, rarity, price, type, serialNumber } = dappy
@@ -27,6 +27,14 @@ export default function DappyCard({ dappy, store }) {
     </div>
   )
 
+  const DesignerButton = () => (
+    <div
+      onClick={() => alert(`${dna} ${name}`)}
+      className="btn btn-bordered btn-light btn-dappy">
+      <i className="ri-shopping-cart-fill btn-icon"></i> {parseInt(price)} FUSD
+    </div>
+  )
+
   return (
     <div className="dappy-card__border">
       <div className={`dappy-card__wrapper ${owned && store && "faded"}`} >
@@ -35,14 +43,18 @@ export default function DappyCard({ dappy, store }) {
         }
         <br />
         <h3 className="dappy-card__title">{name}</h3>
-        <p className="dappy-card__info"># {id} {owned && !store && ` / ${serialNumber}`}</p>
+        {!designer ?
+          <p className="dappy-card__info"># {id} {owned && !store && ` / ${serialNumber}`}</p>
+          : <input className="dappy-card__info" value={dna} />
+        }
+
         <p className="dappy-card__info">{rarity}</p>
       </div>
+      {designer && <DesignerButton />}
+      {!owned && type && !designer === "Dappy" && <DappyButton />}
+      {!owned && type && !designer === "Pack" && <PackButton />}
 
-      {!owned && type === "Dappy" && <DappyButton />}
-      {!owned && type === "Pack" && <PackButton />}
-
-      {store && owned && <div className="collected">Collected</div>}
+      {store && owned && !designer && <div className="collected">Collected</div>}
     </div >
   )
 }

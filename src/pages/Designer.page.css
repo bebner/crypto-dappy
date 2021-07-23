@@ -1,0 +1,15 @@
+.designer__form {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.designer__form__item {
+  margin: 1rem;
+}
+
+.designer__form select{
+  display: block;
+}

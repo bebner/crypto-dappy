@@ -54,15 +54,16 @@ export const createRandomDNA = (rarity = 3, customEyes) => {
   return dna
 }
 
-export const createRandomDappies = (number = 1, theme, customRarity) => {
+export const createRandomDappies = (number = 1, options) => {
   let dappies = [];
-
+  let { customRarity, theme, baseColor, fullRandom = false } = options
   for (let i = 0; i < number; i++) {
+    console.log(i)
     let rarity = customRarity || DAPPY_RARITY_DISTRIBUTION[createRandomNumber(DAPPY_RARITY_DISTRIBUTION.length)]
     let newborn = {
       name: `${faker.name.firstName()} Dappy`,
-      dna: theme ? createThemedDNA(rarity, theme) : createRandomDNA(rarity),
-      id: i + 1
+      dna: theme ? createThemedDNA(rarity, baseColor, fullRandom, theme) : createRandomDNA(rarity),
+      templateID: i + 1
     }
     dappies.push(newborn)
   }
@@ -70,22 +71,27 @@ export const createRandomDappies = (number = 1, theme, customRarity) => {
 }
 
 // Themes: mono, complement, split, double, ana, tri
-export const createThemedDNA = (rarity, theme) => {
-  let startingColor = Please.make_color({ format: "hsv", full_random: false })
+export const createThemedDNA = (rarity, base_color, full_random, theme) => {
+  const options = base_color ? { format: "hsv", full_random, base_color } : { format: "hsv", full_random }
+  let startingColor = Please.make_color(options)
   let scheme;
+  let customTheme = typeof theme === "string"
 
   switch (rarity) {
     case COMMON.stripes:
-      scheme = Please.make_scheme(...startingColor, { scheme_type: "split" })
+      scheme = Please.make_scheme(...startingColor, { scheme_type: customTheme ? theme : "split" })
+      console.log("cOMMON", scheme)
       break;
     case RARE.stripes:
-      scheme = Please.make_scheme(...startingColor, { scheme_type: "double" })
+      scheme = Please.make_scheme(...startingColor, { scheme_type: customTheme ? theme : "double" })
+      console.log("4", scheme)
       break;
     case ULTRARARE.stripes:
-      scheme = Please.make_scheme(...startingColor, { scheme_type: "mono" })
+      scheme = Please.make_scheme(...startingColor, { scheme_type: customTheme ? theme : "mono" })
+      console.log("c5", scheme)
       break;
     default:
-      scheme = Please.make_scheme(...startingColor, { scheme_type: "mono" })
+      scheme = Please.make_scheme(...startingColor, { scheme_type: customTheme ? theme : "mono" })
       break;
   }
 
@@ -113,4 +119,4 @@ export const generateDappies = (dappies = DEFAULT_DAPPIES) => {
   return generatedDappies
 }
 
-export const RANDOM_DAPPIES = createRandomDappies(12)
+// export const RANDOM_DAPPIES = createRandomDappies(12, { theme: true, baseColor: "red", customRarity: 5 })
