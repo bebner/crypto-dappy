@@ -1,15 +1,23 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext } from "react";
 
-import useUserDappies from '../hooks/use-user-dappies.hook'
-import useCollection from '../hooks/use-collection.hook'
-import useFUSD from '../hooks/use-fusd.hook'
+import useUserDappies from "../hooks/use-user-dappies.hook";
+import useCollection from "../hooks/use-collection.hook";
+import useFUSD from "../hooks/use-fusd.hook";
+import { useAuth } from "./AuthProvider";
 
-const UserContext = createContext()
+const UserContext = createContext();
 
 export default function UserProvider({ children }) {
-  const { collection, createCollection, deleteCollection } = useCollection()
-  const { data: balance, createFUSDVault, getFUSDBalance } = useFUSD()
-  const { data: userDappies, addDappy, batchAddDappies, mintDappy } = useUserDappies()
+  const { user } = useAuth();
+  const { collection, createCollection, deleteCollection } =
+    useCollection(user);
+  const { data: balance, createFUSDVault, getFUSDBalance } = useFUSD();
+  const {
+    data: userDappies,
+    addDappy,
+    batchAddDappies,
+    mintDappy,
+  } = useUserDappies();
 
   return (
     <UserContext.Provider
@@ -23,14 +31,14 @@ export default function UserProvider({ children }) {
         deleteCollection,
         balance,
         createFUSDVault,
-        getFUSDBalance
-      }}>
-
+        getFUSDBalance,
+      }}
+    >
       {children}
     </UserContext.Provider>
-  )
+  );
 }
 
 export const useUser = () => {
-  return useContext(UserContext)
-}
+  return useContext(UserContext);
+};
