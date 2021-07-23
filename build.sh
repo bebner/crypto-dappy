@@ -12,5 +12,5 @@ export REACT_APP_FUSD_CONTRACT=${FUSD_CONTRACT}
 export REACT_APP_DAPPY_CONTRACT=${DAPPY_CONTRACT}
 
 npm run build
-
 aws s3 sync ./build s3://cryptodappy
+aws cloudfront create-invalidation --distribution-id E9JFGYAC8D85Q --paths "/*"

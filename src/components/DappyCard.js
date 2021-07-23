@@ -47,12 +47,15 @@ export default function DappyCard({ dappy, store, designer }) {
           <p className="dappy-card__info"># {id} {owned && !store && ` / ${serialNumber}`}</p>
           : <input className="dappy-card__info" value={dna} />
         }
-
         <p className="dappy-card__info">{rarity}</p>
       </div>
-      {designer && <DesignerButton />}
-      {!owned && type && !designer === "Dappy" && <DappyButton />}
-      {!owned && type && !designer === "Pack" && <PackButton />}
+
+      {designer ? <DesignerButton /> :
+        <>
+          {!owned && type === "Dappy" && <DappyButton />}
+          {!owned && type === "Pack" && <PackButton />}
+        </>
+      }
 
       {store && owned && !designer && <div className="collected">Collected</div>}
     </div >

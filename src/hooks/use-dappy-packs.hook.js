@@ -74,7 +74,7 @@ export default function useDappyPacks() {
     let packNum = parseInt(packID.replace("Pack", ""))
     let res = await mutate({
       cadence: MINT_DAPPIES_FROM_PACK,
-      limit: 200,
+      limit: 300,
       args: (arg, t) => [arg(packNum, t.UInt32), arg(dappiesToMint, t.Array(t.UInt32)), arg(amount, t.UFix64)]
 
     })
