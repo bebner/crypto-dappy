@@ -42,13 +42,17 @@ export default function useCollection(user) {
   }
 
   const deleteCollection = async () => {
-    let res = await mutate({
-      cadence: DELETE_COLLECTION,
-      limit: 75
-    })
-    addTx(res)
-    await tx(res).onceSealed()
-    setCollection(false)
+    try {
+      let res = await mutate({
+        cadence: DELETE_COLLECTION,
+        limit: 75
+      })
+      addTx(res)
+      await tx(res).onceSealed()
+      setCollection(false)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return {
