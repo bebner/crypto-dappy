@@ -9,7 +9,7 @@
 
 ## What's CryptoDappy?
 
-CryptoDappy is the fastes way to get started with blockchain development on Flow. Our [learning hub](https://d3em6h2gy0mctd.cloudfront.net/) offers various mission-based scenarios, in which you will build your own full-stack blockchain application that allows for querying, minting and transfering NFTs. You will also learn how to sell these NFTs in packs for a given price of FUSD (Flow's first stablecoin). The NFTs of this application are Dappies, cute little monsters that come with different stripes, rarities and colors. 
+CryptoDappy is the fastest way to get started with blockchain development on Flow. Our [learning hub](https://d3em6h2gy0mctd.cloudfront.net/) offers various mission-based scenarios, in which you will build your own full-stack blockchain application that allows for querying, minting and transfering NFTs. You will also learn how to sell these NFTs in packs for a given price of FUSD (Flow's first stablecoin). The NFTs of this application are Dappies, cute little monsters that come with different stripes, rarities and colors. 
 
 The missions of this course are:
 
