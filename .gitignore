@@ -26,3 +26,5 @@ dappyaccount.json
 dappykeys.json
 userkeys.json
 useraccount.json
+
+publish.sh
