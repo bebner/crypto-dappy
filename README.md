@@ -1,3 +1,5 @@
+![CI Badge](https://github.com/bebner/crypto-dappy/actions/workflows/build_test_react.yml/badge.svg)
+
 ![CryptoDappy Cover](https://d1mtab9ltfdpua.cloudfront.net/images/Cover.jpeg)
 
 * [Demo application (testnet)](https://ds5644cbkdnqk.cloudfront.net/)
