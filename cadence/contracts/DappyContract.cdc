@@ -1,5 +1,6 @@
 
 import FungibleToken from "./FungibleToken.cdc"
+
 pub contract DappyContract {
   access(self) var templates: {UInt32: Template}
   access(self) var families: @{UInt32: Family}
@@ -44,8 +45,8 @@ pub contract DappyContract {
       pre {
         DappyContract.templates[templateID] != nil : "Could not create dappy: template does not exist."
       }
-      let dappy: Template = DappyContract.templates[templateID]!
-      DappyContract.totalDappies = DappyContract.totalDappies + (1 as UInt64)
+      let dappy = DappyContract.templates[templateID]!
+      DappyContract.totalDappies = DappyContract.totalDappies + 1
       self.id = DappyContract.totalDappies
       self.data = Template(templateID: templateID, dna: dappy.dna, name: dappy.name)
     }
@@ -68,7 +69,7 @@ pub contract DappyContract {
       self.familyID = DappyContract.nextFamilyID
       self.templates = []
       self.lazy = {}
-      DappyContract.nextFamilyID = DappyContract.nextFamilyID + (1 as UInt32)
+      DappyContract.nextFamilyID = DappyContract.nextFamilyID + 1
     }
 
     pub fun addTemplate(templateID: UInt32) {
@@ -82,10 +83,9 @@ pub contract DappyContract {
     pub fun mintDappy(templateID: UInt32): @Dappy {
       pre {
         self.templates.contains(templateID): "Could not mint dappy: template does not exist."
-        !self.lazy[templateID]!: "Could not mint Dappy: Template has been retired."
+        !self.lazy[templateID]!: "Could not mint Dappy: template has been retired."
       }
-      let mintedDappy <- create Dappy(templateID: templateID)
-      return <-mintedDappy
+      return <- create Dappy(templateID: templateID)
     }
   }
 
@@ -111,10 +111,9 @@ pub contract DappyContract {
         dna.length > 0 : "Could not create template: dna is required."
         name.length > 0 : "Could not create template: name is required."
       }
-      var newDappyTemplate = Template(templateID: DappyContract.nextTemplateID, dna: dna, name: name)
-      let newDappyID = newDappyTemplate.templateID
-      DappyContract.templates[newDappyID] = newDappyTemplate
-      DappyContract.nextTemplateID = DappyContract.nextTemplateID + (1 as UInt32)
+      let newDappyID = DappyContract.nextTemplateID
+      DappyContract.templates[newDappyID] = Template(templateID: newDappyID, dna: dna, name: name)
+      DappyContract.nextTemplateID = DappyContract.nextTemplateID + 1
       return newDappyID
     }
 
@@ -126,7 +125,7 @@ pub contract DappyContract {
     }
 
     pub fun createFamily(name: String, price: UFix64) {
-      var newFamily <- create Family(name: name, price: price)
+      let newFamily <- create Family(name: name, price: price)
       DappyContract.families[newFamily.familyID] <-! newFamily
     }
 
@@ -165,13 +164,13 @@ pub contract DappyContract {
     pub var ownedDappies: @{UInt64: Dappy}
 
     pub fun withdraw(withdrawID: UInt64): @Dappy {
-      let token <- self.ownedDappies.remove(key: withdrawID) ?? panic("Could not withdraw dappy: dappy does not exist in collection")
+      let token <- self.ownedDappies.remove(key: withdrawID) 
+        ?? panic("Could not withdraw dappy: dappy does not exist in collection")
       return <-token
     }
 
     pub fun deposit(token: @Dappy) {
-      let id = token.id
-      let oldToken <- self.ownedDappies[id] <- token
+      let oldToken <- self.ownedDappies[token.id] <- token
       destroy oldToken
     }
 
@@ -190,7 +189,7 @@ pub contract DappyContract {
     pub fun listDappies(): {UInt64: Template} {
       var dappyTemplates: {UInt64:Template} = {}
       for key in self.ownedDappies.keys {
-        var el = &self.ownedDappies[key] as &Dappy
+        let el = &self.ownedDappies[key] as &Dappy
         dappyTemplates.insert(key: el.id, el.data)
       }
       return dappyTemplates
@@ -214,9 +213,8 @@ pub contract DappyContract {
       self.templates[templateID] != nil : "Could not mint dappy: dappy with given ID does not exist."
       paymentVault.balance >= self.templates[templateID]!.price : "Could not mint dappy: payment balance insufficient."
     }
-    let newDappy <- create Dappy(templateID: templateID)
     destroy paymentVault
-    return <-newDappy
+    return <- create Dappy(templateID: templateID)
   }
 
   pub fun mintDappyFromFamily(familyID: UInt32, templateID: UInt32, paymentVault: @FungibleToken.Vault): @Dappy {
@@ -228,9 +226,8 @@ pub contract DappyContract {
     if familyRef.price > paymentVault.balance {
       panic("Could not mint dappy from family: payment balance is not sufficient.")
     }
-    let newDappy <- familyRef.mintDappy(templateID: templateID)
     destroy paymentVault
-    return <- newDappy
+    return <- familyRef.mintDappy(templateID: templateID)
   }
 
   pub fun batchMintDappiesFromFamily(familyID: UInt32, templateIDs: [UInt32], paymentVault: @FungibleToken.Vault): @Collection {
@@ -239,7 +236,7 @@ pub contract DappyContract {
       templateIDs.length <= 5 : "Could not batch mint dappies from family: batch mint limit of 5 dappies exceeded."
       self.families[familyID] != nil : "Could not batch mint dappies from family: family does not exist."
     }
-    
+
     let familyRef = &self.families[familyID] as! &Family
     if familyRef.price > paymentVault.balance {
       panic("Could not batch mint dappy from family: payment balance is not sufficient.")
@@ -247,13 +244,11 @@ pub contract DappyContract {
     let collection <- create Collection()
 
     for ID in templateIDs {
-      if self.familyContainsTemplate(familyID: familyID, templateID: ID) != true {
+      if !self.familyContainsTemplate(familyID: familyID, templateID: ID) {
         continue
       }
-      var newDappy <- create Dappy(templateID: ID)
-      collection.deposit(token: <-newDappy)
+      collection.deposit(token: <- create Dappy(templateID: ID))
     }
-
     destroy paymentVault
     return <-collection
   }
@@ -265,8 +260,14 @@ pub contract DappyContract {
   pub fun listFamilies(): [FamilyReport] {
     var families: [FamilyReport] = []
     for key in self.families.keys {
-      var el = &self.families[key] as &Family
-      families.append(FamilyReport(name: el.name, familyID: el.familyID, templates: el.templates, lazy: el.lazy, price: el.price))
+      let el = &self.families[key] as &Family
+      families.append(FamilyReport(
+        name: el.name, 
+        familyID: el.familyID, 
+        templates: el.templates, 
+        lazy: el.lazy, 
+        price: el.price
+      ))
     }
     return families
   }
@@ -287,8 +288,14 @@ pub contract DappyContract {
     pre {
       self.families[familyID] != nil : "Could not get family: family does not exist."
     }
-    var el = &self.families[familyID] as! &Family
-    var report = FamilyReport(name: el.name, familyID: el.familyID, templates: el.templates, lazy: el.lazy, price: el.price)
+    let el = &self.families[familyID] as! &Family
+    let report = FamilyReport(
+      name: el.name, 
+      familyID: el.familyID, 
+      templates: el.templates, 
+      lazy: el.lazy, 
+      price: el.price
+    )
     return report
   }
 
@@ -305,10 +312,10 @@ pub contract DappyContract {
     self.totalDappies = 0
     self.nextTemplateID = 1
     self.nextFamilyID = 1
-    self.account.save<@Admin>(<- create Admin(), to: /storage/DappyAdmin)
     self.CollectionStoragePath = /storage/DappyCollection
     self.CollectionPublicPath = /public/DappyCollectionPublic
     self.AdminStoragePath = /storage/DappyAdmin
+    self.account.save<@Admin>(<- create Admin(), to: self.AdminStoragePath)
     self.families <- {}
   }
 
