@@ -2,8 +2,8 @@
 
 ![CryptoDappy Cover](https://d1mtab9ltfdpua.cloudfront.net/images/Cover.jpeg)
 
-* [Demo application (testnet)](https://ds5644cbkdnqk.cloudfront.net/)
-* [Learning hub (start learning here)](https://d3em6h2gy0mctd.cloudfront.net/)
+* [Demo application (testnet)](https://demo.cryptodappy.com/)
+* [Learning hub (start learning here)](https://www.cryptodappy.com/)
 
 ---
 
@@ -20,7 +20,7 @@ The missions of this course are:
 * Mission #4: FUSD and Fungible Tokens
 * Mission #5: Minting
 
-By the end of this course, you will have build your own NFT application that looks like the [demo application of CryptoDappy](https://ds5644cbkdnqk.cloudfront.net/), and deploy it to Flow's testnet. You'll be ready to write, test and deploy your own blockchain applications on Flow.
+By the end of this course, you will have build your own NFT application that looks like the [demo application of CryptoDappy](https://demo.cryptodappy.com/), and deploy it to Flow's testnet. You'll be ready to write, test and deploy your own blockchain applications on Flow.
 
 ---
 
@@ -33,4 +33,4 @@ Manager **Benjamin Ebner** ([Twitter](https://twitter.com/_bebner)|[Medium](http
 
 ## Where to get help?
 
-If you feel stuck building the project or you have any questions regarding the course, you can get help in the dedicated [Flow community forum](https://forum.onflow.org). 
+If you feel stuck building the project or you have any questions regarding the course, you can get help in the dedicated [Flow community forum](https://forum.onflow.org/c/community-projects/cryptodappy/35). 
