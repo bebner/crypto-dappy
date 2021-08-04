@@ -19,7 +19,7 @@ export default function Wallet() {
         </div>
         :
         <div className="wallet__item">
-          💰 FUSD: {balance.slice(0, -6)}
+          💰 FUSD: {balance.slice(0, -6)} <a style={{ color: "white" }} href="https://youtu.be/q8vcEGe95js">(Get FUSD)</a>
         </div>
       }
       <div className="btn btn-small" onClick={() => logOut()}>👋 Logout</div>

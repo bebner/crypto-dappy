@@ -14,6 +14,8 @@ body {
   font-family: "Acumin Regular";
   color: white;
   box-sizing: border-box;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 code {
@@ -33,7 +35,7 @@ code {
   color: white;
   font-size: 3.5rem;
   margin-top: 0;
-  margin-bottom: 0
+  margin-bottom: 0;
 }
 
 .app__subtitle {
@@ -41,5 +43,18 @@ code {
 }
 
 .highlight {
-  color: yellow
+  color: yellow;
+  display: inline-block;
+}
+
+.break {
+  color: yellow;
+  word-break: break-all;
+  color: red !important;
+}
+
+@media (min-width: 700px) {
+  .mobile_only {
+    display: none;
+  }
 }

@@ -15,3 +15,26 @@
 .navbar__item-last {
   margin-right: 0;
 }
+
+.navbar__mobile * {
+  margin: .5rem 0;
+}
+
+.navbar__mobile__trigger {
+  display: block;
+  width: 10rem;
+  margin: 2rem auto;
+ 
+}
+
+@media (max-width: 700px) {
+  .navbar {
+    display: none;
+  }
+}
+
+@media (min-width: 700px) {
+  .navbar__mobile__trigger {
+    display: none;
+  }
+}

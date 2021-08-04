@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from "react-router-dom"
 
 import { NAV_ROUTES } from '../config/routes.config'
-import Wallet from './AccountDetails'
 import "./Navbar.css"
 
 export default function Navbar() {
+  const [mobileMenu, setMobileMenu] = useState(false)
   const history = useHistory()
 
   const NavItem = ({ route }) => (
@@ -17,9 +17,17 @@ export default function Navbar() {
   )
 
   return (
-    <div className="navbar">
-      <Wallet />
-      {NAV_ROUTES.map(item => <NavItem route={item} key={item.path} />)}
-    </div>
+    <>
+      <div className="navbar">
+        {NAV_ROUTES.map(item => <NavItem route={item} key={item.path} />)}
+      </div>
+      <div className="btn btn-bg navbar__mobile__trigger mobile_only" onClick={() => setMobileMenu(prev => !prev)}>Menu</div>
+      {mobileMenu &&
+        <div className="navbar__mobile">
+          {NAV_ROUTES.map(item => <NavItem route={item} key={item.path} />)}
+        </div>
+      }
+
+    </>
   )
 }
