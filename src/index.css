@@ -42,6 +42,20 @@ code {
   font-family: "Monument Light";
 }
 
+.app__subheader {
+  font-family: "Monument Bold";
+  margin-top: 5rem;
+}
+
+.app__hr {
+  color: white;
+  background-color: white;
+  height: .5rem;
+  border-color: white;
+  border-radius: 1rem;
+
+}
+
 .highlight {
   color: yellow;
   display: inline-block;
