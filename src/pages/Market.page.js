@@ -1,14 +1,20 @@
 import React from "react";
 
-import useDappyTemplates from "../hooks/use-dappy-templates.hook";
 import DappyList from "../components/DappyList";
 import Header from "../components/Header";
 import ErrorLoadingRenderer from "../components/ErrorLoadingRenderer";
-import { DEFAULT_DAPPIES } from "../config/dappies.config";
+import useDappyMarket from "../hooks/use-dappy-market.hook";
 
 export default function Dappies() {
-  const { data: dappyTemplates, loading, error } = useDappyTemplates();
-  const dappyTemplates = DEFAULT_DAPPIES;
+  const {
+    marketDappies,
+    unlistedDappies,
+    loadingMarketDappies,
+    loadingUnlistedDappies,
+    error,
+  } = useDappyMarket();
+  console.log(`md in MP: ${marketDappies}`);
+  console.log(`ud in MP: ${unlistedDappies}`);
   return (
     <>
       <Header
@@ -24,14 +30,14 @@ export default function Dappies() {
           </>
         }
       />
-      <h4 className="app__subheader">Dappies on the Market</h4>
-      <ErrorLoadingRenderer loading={loading} error={error}>
-        <DappyList dappies={DEFAULT_DAPPIES} store />
+      <h4 className="app__subheader">Your Unlisted Dappies</h4>
+      <ErrorLoadingRenderer loading={loadingUnlistedDappies} error={error}>
+        <DappyList dappies={unlistedDappies} />
       </ErrorLoadingRenderer>
       <hr className="app__hr"></hr>
-      <h4 className="app__subheader">Your Unlisted Dappies</h4>
-      <ErrorLoadingRenderer loading={loading} error={error}>
-        <DappyList dappies={DEFAULT_DAPPIES} store />
+      <h4 className="app__subheader">Dappies on the Market</h4>
+      <ErrorLoadingRenderer loading={loadingMarketDappies} error={error}>
+        <DappyList dappies={marketDappies} listed/>
       </ErrorLoadingRenderer>
     </>
   );

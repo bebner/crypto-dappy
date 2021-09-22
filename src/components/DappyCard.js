@@ -5,11 +5,27 @@ import { useUser } from '../providers/UserProvider'
 import Dappy from './Dappy'
 import "./DappyCard.css"
 
-export default function DappyCard({ dappy, store, designer }) {
+export default function DappyCard({ dappy, store, designer, listed}) {
   const { userDappies, mintDappy } = useUser()
   const history = useHistory()
   const { id, dna, image, name, rarity, price, type, serialNumber } = dappy
   const owned = userDappies.some(d => d?.id === dappy?.id)
+
+  const ListOnMarketButton = () => (
+    <div
+      onClick={() => mintDappy(id, price)}
+      className="btn btn-bordered btn-light btn-dappy">
+      <i className="iconpark-shoppingcart btn-icon"></i>LIST
+    </div>
+  )
+
+  const RemoveFromMarketButton = () => (
+    <div
+      onClick={() => mintDappy(id, price)}
+      className="btn btn-bordered btn-light btn-dappy">
+      <i className="iconpark-shoppingcart btn-icon"></i>REMOVE
+    </div>
+  )
 
   const DappyButton = () => (
     <div
@@ -51,7 +67,8 @@ export default function DappyCard({ dappy, store, designer }) {
       </div>
 
       {designer ? <DesignerButton /> :
-        <>
+        <>{owned && !listed && <ListOnMarketButton/>}
+          {owned && listed && <RemoveFromMarketButton/>}
           {!owned && type === "Dappy" && <DappyButton />}
           {!owned && type === "Pack" && <PackButton />}
         </>
