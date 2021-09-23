@@ -12,12 +12,7 @@ export const ROUTES = [
   { name: "Collection", path: "/collection", component: Collection, nav: true },
   { name: "Packs", path: "/packs", component: Packs, nav: true },
   { name: "Market", path: "/market", component: Market, nav: true },
-  {
-    name: "PackDetails",
-    path: "/packs/:packID",
-    component: PackDetails,
-    nav: false,
-  },
+  { name: "PackDetails", path: "/packs/:packID", omponent: PackDetails, nav: false},
   { name: "Designer", path: "/designer", component: Designer, nav: false },
 ];
 

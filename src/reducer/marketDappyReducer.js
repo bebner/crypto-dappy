@@ -40,7 +40,8 @@ export const marketDappyReducer = (state, action) => {
     case "ERROR":
       return {
         ...state,
-        loading: false,
+        loadingUnlistedDappies: false,
+        loadingMarketDappies: false,
         error: true,
       };
     default:
