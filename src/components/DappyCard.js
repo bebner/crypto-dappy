@@ -9,7 +9,7 @@ import "./DappyCard.css"
 export default function DappyCard({ dappy, store, designer, listed, market}) {
   const { userDappies, mintDappy } = useUser()
   const history = useHistory()
-  const {buyDappyOnMarket, removeDappyFromMarket, listDappyOnMarket} = useDappyMarket()
+  const {buyDappyOnMarket, removeDappyFromMarket, listDappyOnMarket, updatePrice, listingPrice} = useDappyMarket()
   const { id, dna, image, name, rarity, price, type, serialNumber } = dappy
   const owned = userDappies.some(d => d?.id === dappy?.id)
 
@@ -75,7 +75,7 @@ export default function DappyCard({ dappy, store, designer, listed, market}) {
         }
         <p className="dappy-card__info">{rarity}</p>
       </div>
-
+      {market && owned && !listed && <input className="dappy-input__listing-price" placeholder="Price (FUSD)" value={listingPrice} onChange={updatePrice}></input>}
       {designer ? <DesignerButton /> :
         <>{market && owned && !listed && <ListOnMarketButton/>}
           {market && owned && listed && <RemoveFromMarketButton/>}
@@ -89,3 +89,4 @@ export default function DappyCard({ dappy, store, designer, listed, market}) {
     </div >
   )
 }
+

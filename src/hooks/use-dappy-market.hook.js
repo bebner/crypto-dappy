@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { marketDappyReducer } from "../reducer/marketDappyReducer";
 import { generateDappies } from "../utils/dappies.utils";
 import DappyClass from "../utils/DappyClass";
@@ -10,6 +10,17 @@ export default function useDappyMarket() {
     marketDappies: [],
     unlistedDappies: [],
   });
+
+  const [listingPrice, setListingPrice] = useState("")
+
+  const updatePrice = (event) => {
+    const re = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/;
+    // if value is not blank, test the regex
+    if (event.target.value === '' || re.test(event.target.value)) {
+      console.log(`newPrice: ${event.target.value}`)
+      setListingPrice(event.target.value)
+    }
+  }
 
   useEffect(() => {
     fetchDappies();
@@ -45,6 +56,7 @@ export default function useDappyMarket() {
   const listDappyOnMarket = () => {
       console.log(`List dappy`)
       fetchDappies()
+      setListingPrice("")
   }
 
   const removeDappyFromMarket = () => {
@@ -61,6 +73,9 @@ export default function useDappyMarket() {
       ...state,
       listDappyOnMarket,
       removeDappyFromMarket,
-      buyDappyOnMarket
+      buyDappyOnMarket,
+      updatePrice,
+      listingPrice
     };
 }
+

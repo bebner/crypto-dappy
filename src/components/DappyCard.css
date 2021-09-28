@@ -54,3 +54,9 @@
 .img-large {
   width: 100% !important;
 }
+
+.dappy-input__listing-price {
+  margin-bottom: 0.5rem;
+  outline: none;
+  border: 0px;
+}
