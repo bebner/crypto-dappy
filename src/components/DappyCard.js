@@ -1,15 +1,41 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import useDappyMarket from '../hooks/use-dappy-market.hook'
 
 import { useUser } from '../providers/UserProvider'
 import Dappy from './Dappy'
 import "./DappyCard.css"
 
-export default function DappyCard({ dappy, store, designer }) {
+export default function DappyCard({ dappy, store, designer, listed, market}) {
   const { userDappies, mintDappy } = useUser()
   const history = useHistory()
+  const {buyDappyOnMarket, removeDappyFromMarket, listDappyOnMarket, updatePrice, listingPrice} = useDappyMarket()
   const { id, dna, image, name, rarity, price, type, serialNumber } = dappy
   const owned = userDappies.some(d => d?.id === dappy?.id)
+
+  const ListOnMarketButton = () => (
+    <div
+      onClick={() => listDappyOnMarket()}
+      className="btn btn-bordered btn-light btn-dappy">
+      <i className="ri-list-unordered btn-icon"></i>LIST
+    </div>
+  )
+
+  const RemoveFromMarketButton = () => (
+    <div
+      onClick={() => removeDappyFromMarket()}
+      className="btn btn-bordered btn-light btn-dappy">
+      <i className="ri-close-line btn-icon"></i>REMOVE
+    </div>
+  )
+
+  const BuyFromMarketButton = () => (
+    <div
+      onClick={() => buyDappyOnMarket()}
+      className="btn btn-bordered btn-light btn-dappy">
+      <i className="ri-store-2-line btn-icon"></i>{parseInt(price)} FUSD
+    </div>
+  )
 
   const DappyButton = () => (
     <div
@@ -49,10 +75,12 @@ export default function DappyCard({ dappy, store, designer }) {
         }
         <p className="dappy-card__info">{rarity}</p>
       </div>
-
+      {market && owned && !listed && <input className="dappy-input__listing-price" placeholder="Price (FUSD)" value={listingPrice} onChange={updatePrice}></input>}
       {designer ? <DesignerButton /> :
-        <>
-          {!owned && type === "Dappy" && <DappyButton />}
+        <>{market && owned && !listed && <ListOnMarketButton/>}
+          {market && owned && listed && <RemoveFromMarketButton/>}
+          {market && !owned && <BuyFromMarketButton />}
+          {!market && !owned && type === "Dappy" && <DappyButton />}
           {!owned && type === "Pack" && <PackButton />}
         </>
       }
@@ -61,3 +89,4 @@ export default function DappyCard({ dappy, store, designer }) {
     </div >
   )
 }
+
