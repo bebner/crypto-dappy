@@ -9,7 +9,7 @@ import DappyClass from '../utils/DappyClass'
 
 export default function useUserDappies(user, collection, getFUSDBalance) {
   const [state, dispatch] = useReducer(userDappyReducer, {
-    oading: false,
+    loading: false,
     error: false,
     data: []
   })

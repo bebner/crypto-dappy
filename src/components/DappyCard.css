@@ -1,3 +1,7 @@
+.dappy-card__draggable {
+  draggable: true;
+}
+
 .dappy-card__border {
   position: relative;
   margin-bottom: 2.5rem;

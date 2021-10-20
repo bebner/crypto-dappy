@@ -1,15 +1,31 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
+import { useDrag } from 'react-dnd'
+
 import { useUser } from '../providers/UserProvider'
 import Dappy from './Dappy'
 import "./DappyCard.css"
 
+import PriceButton from './PriceButton'
+
 export default function DappyCard({ dappy, store, designer }) {
+
   const { userDappies, mintDappy } = useUser()
   const history = useHistory()
   const { id, dna, image, name, rarity, price, type, serialNumber } = dappy
   const owned = userDappies.some(d => d?.id === dappy?.id)
+
+  const [{ opacity }, dragRef] = useDrag(
+    () => ({
+      type: 'box',
+      item: { dappy },
+      collect: (monitor) => ({
+        opacity: monitor.isDragging() ? 0.5 : 1
+      })
+    }),
+    []
+  )
 
   const DappyButton = () => (
     <div
@@ -36,7 +52,7 @@ export default function DappyCard({ dappy, store, designer }) {
   )
 
   return (
-    <div className="dappy-card__border">
+    <div ref={dragRef} style={{ ...opacity }} className="dappy-card__border dappy-card__draggable">
       <div className={`dappy-card__wrapper ${owned && store && "faded"}`} >
         {type === "Dappy" ? <Dappy dna={dna} /> :
           <img className={`dappy-card__image ${type === "Pack" && "img-large"}`} src={image} alt="Pack" />
@@ -56,6 +72,8 @@ export default function DappyCard({ dappy, store, designer }) {
           {!owned && type === "Pack" && <PackButton />}
         </>
       }
+
+      {!store && owned && !designer && <PriceButton dappy={dappy}/>}
 
       {store && owned && !designer && <div className="collected">Collected</div>}
     </div >

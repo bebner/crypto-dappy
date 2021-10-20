@@ -3,6 +3,8 @@ import DappyList from '../components/DappyList'
 import Header from '../components/Header'
 import { useUser } from '../providers/UserProvider'
 
+import PackPanel from '../components/PackPanel.comp'
+import BreedPanel from '../components/BreedPanel.comp'
 
 export default function Collection() {
   const { collection, createCollection, deleteCollection, userDappies } = useUser()
@@ -17,10 +19,13 @@ export default function Collection() {
       {!collection ?
         <div className="btn btn-round" onClick={() => createCollection()}>Enable Collection</div> :
         <>
+          <PackPanel />
+          <BreedPanel />
           <DappyList dappies={userDappies} />
           <div className="btn btn-round" onClick={() => deleteCollection()}>Delete Collection</div>
         </>
       }
+
     </>
   )
 }
