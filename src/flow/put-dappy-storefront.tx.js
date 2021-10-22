@@ -1,31 +1,21 @@
-import DappyContract from "../contracts/DappyContract.cdc"
-import FUSD from "../contracts/FUSD.cdc"
-import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
-import FungibleToken from "../contracts/FungibleToken.cdc"
-import DappyNFT from "../contracts/DappyNFT.cdc"
-import NFTStorefront from "../contracts/NFTStorefront.cdc"
-import GalleryContract from "../contracts/GalleryContract.cdc"
+export const PUT_DAPPY_STOREFRONT = `
 
-transaction(dappyID: UInt64, salePrice: UFix64, adminAddress: Address) {
+import DappyContract from 0xDappy
+import FungibleToken from 0xFungibleToken
+import NonFungibleToken from 0xNonFungibleToken
+import FUSD from 0xFUSD
+import DappyNFT from 0xMyDappyNFT
+import NFTStorefront from 0xNFTStorefront
+
+transaction(dappyID: UInt64, salePrice: UFix64) {
 
   let dappyColRef: &DappyContract.Collection
   let nftColRef: &DappyNFT.Collection
-  let managerRef: &{NFTStorefront.StorefrontManager, NFTStorefront.StorefrontPublic}
+  let managerRef: &{NFTStorefront.StorefrontManager}
   let nftProviderCapability: Capability<&{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic}>
   let saleCuts: [NFTStorefront.SaleCut]
-  let galleryRef: &{GalleryContract.GalleryPublic}
-  let sellerAddress: Address
+
   prepare(acct: AuthAccount) { 
-
-    self.sellerAddress = acct.address
-
-    let adminAccount = getAccount(adminAddress)
-    self.galleryRef =adminAccount
-      .getCapability<&{GalleryContract.GalleryPublic}>(
-        GalleryContract.GalleryPublicPath
-      )
-      .borrow()
-      ?? panic ("Could not borrow GalleryPublic from Admin")
 
     self.dappyColRef = acct
       .borrow<&DappyContract.Collection>(
@@ -40,7 +30,7 @@ transaction(dappyID: UInt64, salePrice: UFix64, adminAddress: Address) {
       ?? panic ("Could not borrow NFT Col ref")
     
     self.managerRef = acct
-      .borrow<&{NFTStorefront.StorefrontManager, NFTStorefront.StorefrontPublic}>(
+      .borrow<&{NFTStorefront.StorefrontManager}>(
         from: NFTStorefront.StorefrontStoragePath
       )
       ?? panic ("Could not borrow StorefrontManager ref")
@@ -49,9 +39,10 @@ transaction(dappyID: UInt64, salePrice: UFix64, adminAddress: Address) {
       .getCapability<&{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic}>(
         DappyNFT.CollectionPrivatePath
       )
-
-    let receiver = acct
-      .getCapability<&{FungibleToken.Receiver}>(
+    
+    let account = getAccount(acct.address)
+    let receiver = account
+        .getCapability<&{FungibleToken.Receiver}>(
         /public/fusdReceiver
       )
     self.saleCuts = [ 
@@ -76,22 +67,16 @@ transaction(dappyID: UInt64, salePrice: UFix64, adminAddress: Address) {
    
     self.nftColRef.deposit(token: <- nft)
 
-    let listingResourceID = self.managerRef.createListing(
+    self.managerRef.createListing(
       nftProviderCapability: self.nftProviderCapability, 
       nftType: nftType,
       nftID: nftID,
       salePaymentVaultType: salePaymentVaultType,
       saleCuts: self.saleCuts
-    )
-
-    let listingPublic = self.managerRef
-      .borrowListing(listingResourceID: listingResourceID)!
-
-    self.galleryRef.addListing(
-      listingPublic: listingPublic,
-      sellerAddress: self.sellerAddress
-    )
+    ) 
 
   }
+  
 }
- 
+
+`

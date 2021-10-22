@@ -6,6 +6,19 @@
 		}
 	},
 	"contracts": {
+		"DappyContract": "./cadence/contracts/DappyContract.cdc",
+		"NFTStorefront": {
+			"source": "./cadence/contracts/NFTStorefront.cdc",
+			"aliases": {
+				"testnet": "0x94b06cfca1d8a476"
+			}
+		},
+		"DappyNFT": {
+			"source": "./cadence/contracts/DappyNFT.cdc",
+			"aliases": {
+				"testnet": "0x510627df4617530f"
+			}
+		},
 		"FUSD": {
 			"source": "./cadence/contracts/FUSD.cdc",
 			"aliases": {
@@ -19,37 +32,12 @@
 				"emulator": "ee82856bf20e2aa6"
 			}
 		},
-		"DappyContract": {
-			"source": "./cadence/contracts/DappyContract.cdc",
-			"aliases": {
-				"testnet": "db3d539e48a805b7"
-			}
-		},
 		"NonFungibleToken": {
 			"source": "./cadence/contracts/NonFungibleToken.cdc",
 			"aliases": {
 				"testnet": "96be1b89c734d1f4"
 			}
-		},
-		"NFTStorefront": {
-			"source": "./cadence/contracts/NFTStorefront.cdc",
-			"aliases": {
-				"testnet": "96be1b89c734d1f4"
-			}
-		},
-		"DappyNFT": {
-			"source": "./cadence/contracts/DappyNFT.cdc",
-			"aliases": {
-				"testnet": "96be1b89c734d1f4"
-			}
-		},
-		"GalleryContract": {
-			"source": "./cadence/contracts/GalleryContract.cdc",
-			"aliases": {
-				"testnet": "96be1b89c734d1f4"
-			}
 		}
-
 	},
 	"networks": {
 		"emulator": "127.0.0.1:3569",
@@ -69,7 +57,7 @@
 	"deployments": {
 		"testnet": {
 			"MyWorldAdmin": [
-				"NonFungibleToken", "DappyNFT", "NFTStorefront", "GalleryContract"
+				"NonFungibleToken"
 			]
 		}
 	}

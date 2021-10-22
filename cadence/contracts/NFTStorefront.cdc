@@ -1,5 +1,5 @@
-import FungibleToken from "./FungibleToken.cdc"
-import NonFungibleToken from "./NonFungibleToken.cdc"
+import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
+import FungibleToken from "../contracts/FungibleToken.cdc"
 
 // NFTStorefront
 //
@@ -58,7 +58,9 @@ pub contract NFTStorefront {
     pub event ListingAvailable(
         storefrontAddress: Address,
         listingResourceID: UInt64,
+        nftType: Type,
         nftID: UInt64,
+        ftVaultType: Type,
         price: UFix64
     )
 
@@ -113,9 +115,11 @@ pub contract NFTStorefront {
         // Whether this listing has been purchased or not.
         pub var purchased: Bool
         // The Type of the NonFungibleToken.NFT that is being listed.
+        pub let nftType: Type
         // The ID of the NFT within that type.
         pub let nftID: UInt64
         // The Type of the FungibleToken that payments must be made in.
+        pub let salePaymentVaultType: Type
         // The amount that must be paid in the specified FungibleToken.
         pub let salePrice: UFix64
         // This specifies the division of payment between recipients.
@@ -131,13 +135,17 @@ pub contract NFTStorefront {
         // initializer
         //
         init (
+            nftType: Type,
             nftID: UInt64,
+            salePaymentVaultType: Type,
             saleCuts: [SaleCut],
             storefrontID: UInt64
         ) {
             self.storefrontID = storefrontID
             self.purchased = false
+            self.nftType = nftType
             self.nftID = nftID
+            self.salePaymentVaultType = salePaymentVaultType
 
             // Store the cuts
             assert(saleCuts.length > 0, message: "Listing must have at least one payment cut recipient")
@@ -170,8 +178,9 @@ pub contract NFTStorefront {
         // This will assert in the same way as the NFT standard borrowNFT()
         // if the NFT is absent, for example if it has been sold via another listing.
         //
-        pub fun borrowNFT(): &NonFungibleToken.NFT
+        pub fun borrowNFT(): auth &NonFungibleToken.NFT
 
+        
         // purchase
         // Purchase the listing, buying the token.
         // This pays the beneficiaries and returns the token to the buyer.
@@ -202,11 +211,15 @@ pub contract NFTStorefront {
         // This will assert in the same way as the NFT standard borrowNFT()
         // if the NFT is absent, for example if it has been sold via another listing.
         //
-        pub fun borrowNFT(): &NonFungibleToken.NFT {
+        pub fun borrowNFT(): auth &NonFungibleToken.NFT {
             let ref = self.nftProviderCapability.borrow()!.borrowNFT(id: self.getDetails().nftID)
+            // let ref = .borrowNFT(id: self.getDetails().nftID)
             //- CANNOT DO THIS IN PRECONDITION: "member of restricted type is not accessible: isInstance"
+            //  result.isInstance(self.getDetails().nftType): "token has wrong type"
+            assert(ref.isInstance(self.getDetails().nftType), message: "token has wrong type")
             assert(ref.id == self.getDetails().nftID, message: "token has wrong ID")
-            return ref as &NonFungibleToken.NFT
+
+            return ref 
         }
 
         // getDetails
@@ -225,6 +238,7 @@ pub contract NFTStorefront {
         pub fun purchase(payment: @FungibleToken.Vault): @NonFungibleToken.NFT {
             pre {
                 self.details.purchased == false: "listing has already been purchased"
+                payment.isInstance(self.details.salePaymentVaultType): "payment vault is not requested fungible token"
                 payment.balance == self.details.salePrice: "payment vault does not contain requested price"
             }
 
@@ -238,6 +252,7 @@ pub contract NFTStorefront {
             // to implement the functionality behind the interface in any given way.
             // Therefore we cannot trust the Collection resource behind the interface,
             // and we must check the NFT resource it gives us to make sure that it is the correct one.
+            assert(nft.isInstance(self.details.nftType), message: "withdrawn NFT is not of specified type")
             assert(nft.id == self.details.nftID, message: "withdrawn NFT does not have specified ID")
 
             // Rather than aborting the transaction if any receiver is absent when we try to pay it,
@@ -295,13 +310,17 @@ pub contract NFTStorefront {
         //
         init (
             nftProviderCapability: Capability<&{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic}>,
+            nftType: Type,
             nftID: UInt64,
+            salePaymentVaultType: Type,
             saleCuts: [SaleCut],
             storefrontID: UInt64
         ) {
             // Store the sale information
             self.details = ListingDetails(
+                nftType: nftType,
                 nftID: nftID,
+                salePaymentVaultType: salePaymentVaultType,
                 saleCuts: saleCuts,
                 storefrontID: storefrontID
             )
@@ -317,6 +336,7 @@ pub contract NFTStorefront {
 
             // This will precondition assert if the token is not available.
             let nft = provider!.borrowNFT(id: self.details.nftID)
+            assert(nft.isInstance(self.details.nftType), message: "token is not of specified type")
             assert(nft.id == self.details.nftID, message: "token does not have specified ID")
         }
     }
@@ -331,7 +351,9 @@ pub contract NFTStorefront {
         //
         pub fun createListing(
             nftProviderCapability: Capability<&{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic}>,
+            nftType: Type,
             nftID: UInt64,
+            salePaymentVaultType: Type,
             saleCuts: [SaleCut]
         ): UInt64
         // removeListing
@@ -346,10 +368,10 @@ pub contract NFTStorefront {
     //
     pub resource interface StorefrontPublic {
         pub fun getListingIDs(): [UInt64]
-        pub fun getAllListingDetails(): {UInt64: NFTStorefront.ListingDetails} 
         pub fun borrowListing(listingResourceID: UInt64): &Listing{ListingPublic}?
         pub fun cleanup(listingResourceID: UInt64)
-   }
+        pub fun getAllListingDetails(): {UInt64: NFTStorefront.ListingDetails} 
+    }
 
     // Storefront
     // A resource that allows its owner to manage a list of Listings, and anyone to interact with them
@@ -364,12 +386,16 @@ pub contract NFTStorefront {
         //
          pub fun createListing(
             nftProviderCapability: Capability<&{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic}>,
+            nftType: Type,
             nftID: UInt64,
+            salePaymentVaultType: Type,
             saleCuts: [SaleCut]
          ): UInt64 {
             let listing <- create Listing(
                 nftProviderCapability: nftProviderCapability,
+                nftType: nftType,
                 nftID: nftID,
+                salePaymentVaultType: salePaymentVaultType,
                 saleCuts: saleCuts,
                 storefrontID: self.uuid
             )
@@ -385,7 +411,9 @@ pub contract NFTStorefront {
             emit ListingAvailable(
                 storefrontAddress: self.owner?.address!,
                 listingResourceID: listingResourceID,
+                nftType: nftType,
                 nftID: nftID,
+                ftVaultType: salePaymentVaultType,
                 price: listingPrice
             )
 
@@ -412,6 +440,7 @@ pub contract NFTStorefront {
 
         pub fun getAllListingDetails(): {UInt64: NFTStorefront.ListingDetails} {
             var ret: {UInt64: NFTStorefront.ListingDetails} = {}
+
             for key in self.listings.keys {
                 let listingRef = self.borrowListing(listingResourceID: key) as &Listing{ListingPublic}?
                 if listingRef != nil {

@@ -7,7 +7,13 @@ const UserContext = createContext()
 
 export default function MarketProvider({ children }) {
 
-    const { data: userPack, price: packPrice, addToPack, removeFromPack } = userUserPack()
+    const { 
+        data: userPack, 
+        price: packPrice, 
+        addToPack, 
+        removeFromPack,
+        listDappyForSale } 
+    = userUserPack()
 
     return (
         <UserContext.Provider
@@ -15,7 +21,8 @@ export default function MarketProvider({ children }) {
                 packPrice,
                 userPack,
                 addToPack,
-                removeFromPack
+                removeFromPack,
+                listDappyForSale
             }}>
             <DndProvider backend={HTML5Backend}>
                 {children}

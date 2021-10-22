@@ -40,6 +40,7 @@ describe("NFTStorefront", () => {
   it("deploys Storefront contract", async () => {
     let DappyAdmin = await dappyContract.getDappyAdminAddress()
     mintFlow(DappyAdmin, "10.0")
+    await storefront.deployNonFungibleToken()
     await storefront.deployNFTStorefront()
   });
 
@@ -62,12 +63,26 @@ describe("NFTStorefront", () => {
     await storefront.createDappyNFTCollection(recipient)
   });
 
-  it.only("Should list 1 dappy for sale", async () => {
+  it("creates Admin Gallery", async () => {
+    let DappyAdmin = await dappyContract.getDappyAdminAddress()
+    await mintFlow(DappyAdmin, "10.0")
+    await storefront.deployNonFungibleToken()
+    await dappyContract.deployDappyContract()
+    await storefront.deployDappyNFT()
+    await storefront.deployNFTStorefront()
+    await storefront.deployGalleryContract()
+    await storefront.createAdminGallery(DappyAdmin)
+  });
+
+  it("Should list 1 dappy for sale", async () => {
     let DappyAdmin = await dappyContract.getDappyAdminAddress()
     mintFlow(DappyAdmin, "10.0")
     await storefront.deployNonFungibleToken()
-    await storefront.deployNFTStorefront()
     await dappyContract.deployDappyContract()
+    await storefront.deployDappyNFT()
+    await storefront.deployNFTStorefront()
+    await storefront.deployGalleryContract()
+
     await dappyContract.createDappyTemplate(TEST_DAPPY)
     const recipient = await getAccountAddress("DappyRecipient")
     await mintFlow(recipient, "10.0")
@@ -76,7 +91,6 @@ describe("NFTStorefront", () => {
     await mintFUSD(DappyAdmin, "100.00")
     await dappyContract.createDappyCollection(recipient)
     await dappyContract.mintDappy(recipient, TEST_DAPPY)
-    await storefront.deployDappyNFT()
     await storefront.createDappyNFTCollection(recipient)
     await storefront.createNFTStorefront(recipient)
 
@@ -85,13 +99,21 @@ describe("NFTStorefront", () => {
       [recipient]: "8.0"
     }
 
-    await storefront.putDappyInStorefront(recipient, 1, saleCuts) // list dappy with id=1 for sale
-    
-    // emulator.setLogging(true)
-    const userListings = await storefront.listStorefrontListings(recipient)
+    const salePrice = "11.0"
 
-    console.log(userListings)
+    // emulator.setLogging(true)
+    await storefront.createAdminGallery(DappyAdmin)
+    await storefront.putDappyInStorefront(recipient, 1, salePrice) // list dappy with id=1 for sale
     
+    const dappyID = await storefront.listStorefrontListings(recipient)
+    expect(dappyID).toBe(1)
+
+    const gallery = await storefront.listGalleryCollection()
+    const nftID = Object.values(gallery)[0].listingDetails.nftID
+    const sellerAddress = Object.values(gallery)[0].sellerAddress
+    expect(nftID).toBe(1)
+    expect(sellerAddress).toBe(recipient)
+            
   }); 
 
   

@@ -27,7 +27,8 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
 
         for (let key in res) {
           const element = res[key]
-          let dappy = new DappyClass(element.templateID, element.dna, element.name, element.price, key)
+          const serialNumber = parseInt(key)
+          let dappy = new DappyClass(element.templateID, element.dna, element.name, element.price, serialNumber)
           mappedDappies.push(dappy)
         }
 
@@ -72,7 +73,7 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
       })
       const dappies = Object.values(res)
       const dappy = dappies.find(d => d?.templateID === templateID)
-      const newDappy = new DappyClass(dappy.templateID, dappy.dna, dappy.name)
+      const newDappy = new DappyClass(dappy.templateID, dappy.dna, dappy.name, dappy.price, dappy.serialNumber)
       dispatch({ type: 'ADD', payload: newDappy })
     } catch (err) {
       console.log(err)
@@ -101,6 +102,6 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
     ...state,
     mintDappy,
     addDappy,
-    batchAddDappies
+    batchAddDappies,
   }
 }

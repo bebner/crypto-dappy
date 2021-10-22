@@ -1,3 +1,4 @@
+import { query } from "@onflow/fcl";
 import {
   getAccountAddress,
   mintFlow,
@@ -44,16 +45,44 @@ export const createNFTStorefront = async(recipient) => {
   await sendTransaction({ name, signers })
 }
 
-export const putDappyInStorefront = async (recipient, dappyID, saleCuts) => {
+export const deployGalleryContract = async () => {
+  const DappyAdmin = await dappyContract.getDappyAdminAddress()
+  const addressMap = { 
+    DappyContract: DappyAdmin,
+    NFTStorefront: DappyAdmin
+  }
+  await deployContractByName({ to: DappyAdmin, name: "GalleryContract", addressMap })
+}
+
+export const createAdminGallery = async(admin) => {
+  const DappyAdmin = await dappyContract.getDappyAdminAddress()
+  const name = "CreateAdminGallery"
+  const addressMap = { 
+    GalleryContract: DappyAdmin,
+  }
+  const signers = [admin]
+  await sendTransaction({ name, signers, addressMap })
+}
+
+export const putDappyInStorefront = async (recipient, dappyID, salePrice) => {
+  const DappyAdmin = await dappyContract.getDappyAdminAddress()
   const name = "PutDappyInStorefront"
   const signers = [recipient]
-  const args = [dappyID, saleCuts]
+  const args = [dappyID, salePrice, DappyAdmin]
   await sendTransaction({ name, signers, args })
 }
 
 export const listStorefrontListings = async (recipient) => {
   const name = "ListStorefrontListings"
   const args = [recipient]
-  const listings = await executeScript({ name, args })
-  return listings
+  const dappyID = await executeScript({ name, args })
+  return dappyID
+}
+
+export const listGalleryCollection = async () => {
+  const DappyAdmin = await dappyContract.getDappyAdminAddress()
+  const name = "ListGalleryCollection"
+  const args = [DappyAdmin]
+  const dappyID = await executeScript({ name, args })
+  return dappyID
 }

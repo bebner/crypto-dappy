@@ -1,6 +1,14 @@
 import {  useReducer } from 'react'
+import { mutate, tx } from '@onflow/fcl'
+
+import { useTxs } from '../providers/TxProvider'
+
+import { PUT_DAPPY_STOREFRONT } from '../flow/put-dappy-storefront.tx'
 
 export default function useUserPack() {
+
+  const { addTx, runningTxs } = useTxs()
+
   const reducer = (state, action)  => {
     switch (action.type) {
       case 'ADD':
@@ -44,9 +52,38 @@ export default function useUserPack() {
   const removeFromPack = async ({dappy}) => {
   }
 
+  const listDappyForSale = async (dappy, wantPrice) => {
+
+    const dappyID = dappy.serialNumber
+
+    const salePrice = parseFloat(wantPrice).toFixed(8)
+
+    if (runningTxs) {
+      alert("Transactions are still running. Please wait for them to finish first.")
+      return
+    }
+
+    try {
+      let res = await mutate({
+        cadence: PUT_DAPPY_STOREFRONT,
+        limit: 100,
+        args: (arg, t) => [
+          arg(dappyID, t.UInt64), 
+          arg(salePrice, t.UFix64)
+        ]
+      })
+      addTx(res)
+      await tx(res).onceSealed()
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   return {
     ...state,
     addToPack,
-    removeFromPack
+    removeFromPack,
+    listDappyForSale
   }
 }

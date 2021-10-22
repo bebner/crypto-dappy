@@ -66,9 +66,9 @@ pub contract DappyNFT: NonFungibleToken {
 
         }
 
-        pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
+        pub fun borrowNFT(id: UInt64): auth &NonFungibleToken.NFT {
 
-            return &self.ownedNFTs[id] as &NonFungibleToken.NFT
+            return &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
 
         }
 
