@@ -346,6 +346,7 @@ pub contract NFTStorefront {
     //
     pub resource interface StorefrontPublic {
         pub fun getListingIDs(): [UInt64]
+        pub fun getAllListingDetails(): {UInt64: NFTStorefront.ListingDetails} 
         pub fun borrowListing(listingResourceID: UInt64): &Listing{ListingPublic}?
         pub fun cleanup(listingResourceID: UInt64)
    }
@@ -407,6 +408,17 @@ pub contract NFTStorefront {
         //
         pub fun getListingIDs(): [UInt64] {
             return self.listings.keys
+        }
+
+        pub fun getAllListingDetails(): {UInt64: NFTStorefront.ListingDetails} {
+            var ret: {UInt64: NFTStorefront.ListingDetails} = {}
+            for key in self.listings.keys {
+                let listingRef = self.borrowListing(listingResourceID: key) as &Listing{ListingPublic}?
+                if listingRef != nil {
+                    ret[key] = listingRef!.getDetails()
+                }
+            } 
+            return ret
         }
 
         // borrowSaleItem

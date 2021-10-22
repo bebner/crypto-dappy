@@ -7,6 +7,7 @@
 	},
 	"contracts": {
 		"DappyContract": "./cadence/contracts/DappyContract.cdc",
+		"NFTStorefront": "./cadence/contracts/NFTStorefront.cdc",
 		"FUSD": {
 			"source": "./cadence/contracts/FUSD.cdc",
 			"aliases": {

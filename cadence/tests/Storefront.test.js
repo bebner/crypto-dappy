@@ -85,13 +85,14 @@ describe("NFTStorefront", () => {
       [recipient]: "8.0"
     }
 
+    await storefront.putDappyInStorefront(recipient, 1, saleCuts) // list dappy with id=1 for sale
+    
     // emulator.setLogging(true)
-    await storefront.listDappyInStorefront(recipient, 1, saleCuts) // list dappy with id=1 for sale
+    const userListings = await storefront.listStorefrontListings(recipient)
 
-    // const userListings = await dappyContract.listStorefront(recipient)
+    console.log(userListings)
     
   }); 
 
-
-
+  
 })

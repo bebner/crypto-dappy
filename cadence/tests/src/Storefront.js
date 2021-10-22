@@ -44,12 +44,16 @@ export const createNFTStorefront = async(recipient) => {
   await sendTransaction({ name, signers })
 }
 
-export const listDappyInStorefront = async (recipient, dappyID, saleCuts) => {
-  const name = "ListDappyInStorefront"
+export const putDappyInStorefront = async (recipient, dappyID, saleCuts) => {
+  const name = "PutDappyInStorefront"
   const signers = [recipient]
   const args = [dappyID, saleCuts]
   await sendTransaction({ name, signers, args })
-  
-  // let intType: Type = Type<Int>()
-  // let type: Type = something.getType()
+}
+
+export const listStorefrontListings = async (recipient) => {
+  const name = "ListStorefrontListings"
+  const args = [recipient]
+  const listings = await executeScript({ name, args })
+  return listings
 }
