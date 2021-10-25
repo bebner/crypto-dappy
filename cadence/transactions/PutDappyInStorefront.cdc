@@ -78,7 +78,7 @@ transaction(dappyID: UInt64, salePrice: UFix64, adminAddress: Address) {
 
     let listingResourceID = self.managerRef.createListing(
       nftProviderCapability: self.nftProviderCapability, 
-      nftType: nftType,
+    let listingResourceID = self.managerRef.createListing(
       nftID: nftID,
       salePaymentVaultType: salePaymentVaultType,
       saleCuts: self.saleCuts
