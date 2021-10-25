@@ -4,8 +4,7 @@ import { mutate, query, tx } from '@onflow/fcl'
 import { CHECK_COLLECTION } from '../flow/check-collection.script'
 import { DELETE_COLLECTION } from '../flow/delete-collection.tx'
 import { CREATE_COLLECTION } from '../flow/create-collection.tx'
-import { DELETE_NFT_COLLECTION } from '../flow/delete-nft-collection.tx'
-import { CREATE_NFT_COLLECTION } from '../flow/create-nft-collection.tx'
+
 import { useTxs } from '../providers/TxProvider'
 
 export default function useCollection(user) {
@@ -41,34 +40,37 @@ export default function useCollection(user) {
     addTx(res)
     await tx(res).onceSealed()
 
-    let resNFT = await mutate({
-      cadence: CREATE_NFT_COLLECTION,
-      limit: 55
-    })
-    addTx(resNFT)
-    await tx(resNFT).onceSealed()
-    
     setCollection(true)
+
   }
 
   const deleteCollection = async () => {
+
+    // import { LIST_USER_DAPPIES_IDS } from '../flow/list-user-dappies-ids.script'
+    // console.log("THIS IS A TEST")
+    // try {
+    //   let res = await query({
+    //     cadence: LIST_USER_DAPPIES_IDS,
+    //     args: (arg, t) => [arg(user?.addr, t.Address)]
+    //   })      
+    //   console.log(res)
+    // } catch (err) {
+    //   console.err(err, err.stack)
+    // }    
+    // console.log("THIS IS A TEST")
+    // return
+
     try {
+      
       let res = await mutate({
         cadence: DELETE_COLLECTION,
         limit: 75
       })
       addTx(res)
       await tx(res).onceSealed()
+
       setCollection(false)
 
-      let resNFT = await mutate({
-        cadence: DELETE_NFT_COLLECTION,
-        limit: 75
-      })
-      addTx(resNFT)
-      await tx(resNFT).onceSealed()
-      
-      setCollection(false)
     } catch (err) {
       console.log(err)
     }

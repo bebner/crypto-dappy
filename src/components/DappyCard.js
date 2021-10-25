@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
 
 import { useUser } from '../providers/UserProvider'
+import { useMarket } from '../providers/MarketProvider'
+
 import Dappy from './Dappy'
 import "./DappyCard.css"
 
@@ -12,6 +14,8 @@ import PriceButton from './PriceButton'
 export default function DappyCard({ dappy, store, designer }) {
 
   const { userDappies, mintDappy } = useUser()
+  const { purchaseDappy } = useMarket()
+
   const history = useHistory()
   const { id, dna, image, name, rarity, price, type, serialNumber } = dappy
   const owned = userDappies.some(d => d?.id === dappy?.id)
@@ -28,9 +32,17 @@ export default function DappyCard({ dappy, store, designer }) {
   )
 
   const DappyButton = () => (
-    <div
+      <div
       onClick={() => mintDappy(id, price)}
       className="btn btn-bordered btn-light btn-dappy">
+      <i className="ri-shopping-cart-fill btn-icon"></i> {parseInt(price)} FUSD
+    </div>
+  )
+  
+  const StorefrontButton = () => (
+      <div
+      onClick={() => purchaseDappy(dappy)}
+      className="btn btn-bordered btn-light btn-storefront">
       <i className="ri-shopping-cart-fill btn-icon"></i> {parseInt(price)} FUSD
     </div>
   )
@@ -38,6 +50,7 @@ export default function DappyCard({ dappy, store, designer }) {
   const PackButton = () => (
     <div
       onClick={() => history.push(`/packs/${id}`)}
+      
       className="btn btn-bordered btn-light btn-dappy">
       More
     </div>
@@ -68,7 +81,8 @@ export default function DappyCard({ dappy, store, designer }) {
 
       {designer ? <DesignerButton /> :
         <>
-          {!owned && type === "Dappy" && <DappyButton />}
+          {!owned && type === "Dappy" && !dappy.listingResourceID &&<DappyButton />}
+          {!owned && type === "Dappy" && dappy.listingResourceID && <StorefrontButton />}
           {!owned && type === "Pack" && <PackButton />}
         </>
       }

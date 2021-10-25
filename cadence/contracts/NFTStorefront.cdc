@@ -185,11 +185,13 @@ pub contract NFTStorefront {
         // Purchase the listing, buying the token.
         // This pays the beneficiaries and returns the token to the buyer.
         //
-        pub fun purchase(payment: @FungibleToken.Vault): @NonFungibleToken.NFT
+        pub fun purchase(payment: @FungibleToken.Vault):  @NonFungibleToken.NFT
 
         // getDetails
         //
         pub fun getDetails(): ListingDetails
+
+        pub fun getListingResourceID(): UInt64
     }
 
 
@@ -230,6 +232,11 @@ pub contract NFTStorefront {
         pub fun getDetails(): ListingDetails {
             return self.details
         }
+
+        pub fun getListingResourceID(): UInt64 {
+            return self.uuid
+        }
+
 
         // purchase
         // Purchase the listing, buying the token.
@@ -509,3 +516,4 @@ pub contract NFTStorefront {
         emit NFTStorefrontInitialized()
     }
 }
+ 

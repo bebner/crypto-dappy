@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react'
 import { mutate, query, tx } from '@onflow/fcl'
 
 import { LIST_USER_DAPPIES } from '../flow/list-user-dappies.script'
+
 import { MINT_DAPPY } from '../flow/mint-dappy.tx'
 import { userDappyReducer } from '../reducer/userDappyReducer'
 import { useTxs } from '../providers/TxProvider'
@@ -23,6 +24,7 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
           cadence: LIST_USER_DAPPIES,
           args: (arg, t) => [arg(user?.addr, t.Address)]
         })
+
         let mappedDappies = []
 
         for (let key in res) {
@@ -35,6 +37,7 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
         dispatch({ type: 'SUCCESS', payload: mappedDappies })
       } catch (err) {
         dispatch({ type: 'ERROR' })
+        console.log(err)
       }
     }
     fetchUserDappies()
@@ -71,6 +74,7 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
         cadence: LIST_USER_DAPPIES,
         args: (arg, t) => [arg(user?.addr, t.Address)]
       })
+      // TODO: if serialNumber is missing, need to prompt user to refresh
       const dappies = Object.values(res)
       const dappy = dappies.find(d => d?.templateID === templateID)
       const newDappy = new DappyClass(dappy.templateID, dappy.dna, dappy.name, dappy.price, dappy.serialNumber)

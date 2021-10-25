@@ -8,7 +8,7 @@ class DappyClass {
     this.name = name
     this.price = price || 0
     this.serialNumber = serialNumber || 0
-  }
+}
 
   get rarity() {
     switch (parseDNA(this.dna).length - 1) {

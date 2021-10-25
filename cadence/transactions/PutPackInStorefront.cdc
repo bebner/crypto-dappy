@@ -2,14 +2,14 @@ import DappyContract from "../contracts/DappyContract.cdc"
 import FUSD from "../contracts/FUSD.cdc"
 import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
 import FungibleToken from "../contracts/FungibleToken.cdc"
-import DappyNFT from "../contracts/DappyNFT.cdc"
+import PackNFT from "../contracts/PackNFT.cdc"
 import NFTStorefront from "../contracts/NFTStorefront.cdc"
-import GalleryContract from "../contracts/GalleryContract.cdc"
+import GalleryContract from "../contracts/GalleryContract.cdc" 
 
-transaction(dappyID: UInt64, salePrice: UFix64, adminAddress: Address) {
+transaction(dappyIDs: [UInt64], salePrice: UFix64, adminAddress: Address) {
 
   let dappyColRef: &DappyContract.Collection
-  let nftColRef: &DappyNFT.Collection
+  let nftColRef: &PackNFT.Collection
   let nftProviderCapability: Capability<&{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic}>
   let saleCuts: [NFTStorefront.SaleCut]
   let sellerAddress: Address
@@ -28,8 +28,8 @@ transaction(dappyID: UInt64, salePrice: UFix64, adminAddress: Address) {
       ?? panic ("Could not borrow Dappy Col ref")
       
     self.nftColRef = acct
-      .borrow<&DappyNFT.Collection>(
-        from: DappyNFT.CollectionStoragePath
+      .borrow<&PackNFT.Collection>(
+        from: PackNFT.CollectionStoragePath
       )
       ?? panic ("Could not borrow NFT Col ref")
     
@@ -41,13 +41,14 @@ transaction(dappyID: UInt64, salePrice: UFix64, adminAddress: Address) {
 
     self.nftProviderCapability = acct
       .getCapability<&{NonFungibleToken.Provider, NonFungibleToken.CollectionPublic}>(
-        DappyNFT.CollectionPrivatePath
+        PackNFT.CollectionPrivatePath
       )
 
     let receiver = acct
       .getCapability<&{FungibleToken.Receiver}>(
         /public/fusdReceiver
       )
+
     self.saleCuts = [ 
       NFTStorefront.SaleCut(
         receiver: receiver, 
@@ -58,26 +59,34 @@ transaction(dappyID: UInt64, salePrice: UFix64, adminAddress: Address) {
   }
 
   execute {
-
-    let dappy <- self.dappyColRef.withdraw(withdrawID: dappyID)
     
-    let nft <- DappyNFT.createFromDappy(dappy: <- dappy)
+    let dappies: @{UInt64: DappyContract.Dappy} <- {}
+
+    for dappyID in dappyIDs {
+        
+        let dappy <- self.dappyColRef.withdraw(withdrawID: 
+        dappyID)
+        let old <- dappies[dappyID] <- dappy
+        destroy old        
+        
+    }
+
+    let nft <- PackNFT.createFromDappies(dappies: <- dappies)
     
     let nftID = nft.id
-
-    let nftType = Type<@DappyNFT.NFT>()
-    let salePaymentVaultType = Type<@FUSD.Vault>()
-   
+    let nftType = Type<@PackNFT.NFT>()
+    let salePaymentVaultType = Type<@FUSD.Vault>() 
     self.nftColRef.deposit(token: <- nft)
 
     let listingResourceID = self.managerRef.createListing(
-      nftProviderCapability: self.nftProviderCapability, 
-      nftType: nftType,
-      nftID: nftID,
-      salePaymentVaultType: salePaymentVaultType,
-      saleCuts: self.saleCuts
+        nftProviderCapability: self.nftProviderCapability, 
+        nftType: nftType,
+        nftID: nftID,
+        salePaymentVaultType: salePaymentVaultType,
+        saleCuts: self.saleCuts
     )
     
   }
+
 }
  

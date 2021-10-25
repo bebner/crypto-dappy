@@ -9,5 +9,6 @@ config({
   "0xNonFungibleToken": process.env.REACT_APP_NFT_CONTRACT,
   "0xNFTStorefront": process.env.REACT_APP_NFTSTOREFRONT_CONTRACT,
   "0xMyDappyNFT": process.env.REACT_APP_DAPPYNFT_CONTRACT,
+  "0xPackNFT": process.env.REACT_APP_PACKNFT_CONTRACT,
   "0xGalleryContract": process.env.REACT_APP_GALLERY_CONTRACT
 })

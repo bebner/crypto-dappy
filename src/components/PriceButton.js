@@ -13,7 +13,7 @@ export default function PriceButton({ dappy }) {
 
   const defaultPrice = parseFloat(dappy.price).toFixed(8).slice(0, -6)
 
-  const { value: wantPrice, setValue: setPrice, bind: bindPrice, reset: resetPrice } = useInput(defaultPrice);
+  const { value: wantPrice, bind: bindPrice } = useInput(defaultPrice);
 
   const clickShow = () => {
     setSell(!sell);

@@ -3,7 +3,7 @@ import DappyNFT from "../contracts/DappyNFT.cdc"
 import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
 import DappyContract from "../contracts/DappyContract.cdc"
 
-pub fun main(addr: Address): UInt64 {
+pub fun main(addr: Address): {UInt64: NFTStorefront.ListingDetails} {
 
   let account = getAccount(addr)
 
@@ -15,12 +15,14 @@ pub fun main(addr: Address): UInt64 {
     ?? panic ("Could not borrow StorefrontPublic ref")
 
   let listings = storefrontRef.getListingIDs()
-
-  let listingRef = storefrontRef.borrowListing(listingResourceID: listings[0])
-
-  let nftRef =listingRef!.borrowNFT() as! &DappyNFT.NFT
- 
-  var ret = nftRef.nft.id
+  
+  let ret: {UInt64: NFTStorefront.ListingDetails} = {}
+  for id in listings {
+    
+    let listingRef = storefrontRef.borrowListing(listingResourceID: id)
+    
+    ret[id] = listingRef?.getDetails()
+  }
 
   return ret
   

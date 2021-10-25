@@ -43,6 +43,12 @@
 				"testnet": "96be1b89c734d1f4"
 			}
 		},
+		"PackNFT": {
+			"source": "./cadence/contracts/PackNFT.cdc",
+			"aliases": {
+				"testnet": "96be1b89c734d1f4"
+			}
+		},
 		"GalleryContract": {
 			"source": "./cadence/contracts/GalleryContract.cdc",
 			"aliases": {
@@ -69,7 +75,7 @@
 	"deployments": {
 		"testnet": {
 			"MyWorldAdmin": [
-				"NonFungibleToken", "DappyNFT", "NFTStorefront", "GalleryContract"
+				"NonFungibleToken", "DappyNFT", "PackNFT", "NFTStorefront", "GalleryContract"
 			]
 		}
 	}

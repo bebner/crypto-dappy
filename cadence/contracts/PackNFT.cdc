@@ -1,7 +1,7 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
 import DappyContract from "./DappyContract.cdc"
 
-pub contract DappyNFT: NonFungibleToken {
+pub contract PackNFT: NonFungibleToken {
 
     pub let CollectionStoragePath: StoragePath
     pub let CollectionPublicPath: PublicPath
@@ -18,44 +18,52 @@ pub contract DappyNFT: NonFungibleToken {
     pub resource NFT: NonFungibleToken.INFT  {
       
         pub let id: UInt64
-        access(self) let nft: @{UInt64: DappyContract.Dappy}
-        // access(self) var nft: @DappyContract.Dappy?
+        access(self) var nft: @{UInt64: DappyContract.Dappy}
+        access(self) var dappyIDs: [UInt64]
         access(self) var data: {UInt64: DappyContract.Template}
-        access(self) var nftUUID: UInt64?
         
-        pub init(nft: @DappyContract.Dappy) {
-          self.id = nft.id
-          self.data = {self.id: nft.data}
-          self.nftUUID = nft.uuid
-          self.nft <-{nft.uuid: <-nft}
-          DappyNFT.totalSupply = DappyNFT.totalSupply + (1 as UInt64)
+        pub init(nft: @{UInt64: DappyContract.Dappy}) {
+            
+            self.dappyIDs = nft.keys
 
-        }
-
-        pub fun withdrawDappy(): @DappyContract.Dappy? {
-            let ret <- self.nft[self.nftUUID!] <-nil
+            let temp: @{UInt64: DappyContract.Dappy} <- {}
             self.data = {}
-            self.nftUUID = nil
-            return <- ret
+            for key in nft.keys {
+                let x <- nft[key] <- nil
+                self.data[key] = x?.data
+                let old <- temp[key] <- x
+                destroy old
+            }
+            self.nft <- temp
+            destroy nft
+
+            PackNFT.totalSupply = PackNFT.totalSupply + (1 as UInt64)
+            self.id = PackNFT.totalSupply
+
         }
+
+        pub fun withdrawDappies(): @{UInt64: DappyContract.Dappy} {
+            let ret: @{UInt64: DappyContract.Dappy} <- {}
+            for id in self.dappyIDs {
+                let x <- self.nft[id] <- nil
+                let old <- ret[id] <- x
+                destroy old
+            }
+            self.dappyIDs = []
+            self.data = {}
+            return <- ret
+           
+            // let ret <- self.nft <-nil
+            // return <- ret
+        }
+
+        pub fun getIDs(): [UInt64] {
+            return self.dappyIDs
+        }       
 
         pub fun getData(): {UInt64: DappyContract.Template} {
             return self.data
-        }
-
-        pub fun borrowDappy(): &DappyContract.Dappy? {
-            if self.nftUUID == nil {return nil}
-            return &self.nft[self.nftUUID!] as &DappyContract.Dappy
-            // let d <- self.withdrawDappy()
-            // if d == nil {
-            //     destroy d
-            //     return nil
-            // }
-            // let r <- d!
-            // let ret = &r as &DappyContract.Dappy 
-            // self.nft <-! r
-            // return ret
-        }
+        }       
 
         destroy () {
           destroy self.nft
@@ -121,19 +129,20 @@ pub contract DappyNFT: NonFungibleToken {
 
     }
 
-    pub fun createFromDappy(dappy: @DappyContract.Dappy): @NFT {
+    pub fun createFromDappies(dappies: @{UInt64:
+    DappyContract.Dappy}): @NFT {
 
         return <- create NFT(
-            nft: <- dappy
+            nft: <- dappies
         )
         
     }
 
     init() {
 
-        self.CollectionStoragePath = /storage/DappyNFTCollection
-        self.CollectionPublicPath = /public/DappyNFTCollection
-        self.CollectionPrivatePath = /private/DappyNFTCollection
+        self.CollectionStoragePath = /storage/PackNFTCollection
+        self.CollectionPublicPath = /public/PackNFTCollection
+        self.CollectionPrivatePath = /private/PackNFTCollection
 
         self.totalSupply = 0
 
