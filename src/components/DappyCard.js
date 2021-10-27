@@ -13,7 +13,7 @@ import PriceButton from './PriceButton'
 
 export default function DappyCard({ dappy, store, designer }) {
 
-  const { userDappies, mintDappy } = useUser()
+  const { userDappies, mintDappy, fetchUserDappies } = useUser()
   const { purchaseDappy } = useMarket()
 
   const history = useHistory()
@@ -31,9 +31,19 @@ export default function DappyCard({ dappy, store, designer }) {
     []
   )
 
+  const onPurchase = async() => {
+    await purchaseDappy(dappy)
+    await fetchUserDappies()  
+  }
+
+  const onMint = async() => {
+    await mintDappy(id, price)
+    await fetchUserDappies()  
+  }
+
   const DappyButton = () => (
       <div
-      onClick={() => mintDappy(id, price)}
+      onClick={onMint}
       className="btn btn-bordered btn-light btn-dappy">
       <i className="ri-shopping-cart-fill btn-icon"></i> {parseInt(price)} FUSD
     </div>
@@ -41,17 +51,17 @@ export default function DappyCard({ dappy, store, designer }) {
   
   const StorefrontButton = () => (
       <div
-      onClick={() => purchaseDappy(dappy)}
+      onClick={onPurchase}
       className="btn btn-bordered btn-light btn-storefront">
       <i className="ri-shopping-cart-fill btn-icon"></i> {parseInt(price)} FUSD
     </div>
   )
 
   const PackButton = () => (
+
     <div
-      onClick={() => history.push(`/packs/${id}`)}
-      
-      className="btn btn-bordered btn-light btn-dappy">
+      onClick={() => history.push(`/packs/${id}`)}      
+      className={`btn btn-bordered btn-light btn-dappy ${dappy.sellerAddress && "btn-storefront"}`}>
       More
     </div>
   )
@@ -83,7 +93,17 @@ export default function DappyCard({ dappy, store, designer }) {
         <>
           {!owned && type === "Dappy" && !dappy.listingResourceID &&<DappyButton />}
           {!owned && type === "Dappy" && dappy.listingResourceID && <StorefrontButton />}
+
+          {!owned && type === "Dappy" && 
+            dappy.listingResourceID &&
+            dappy.sellerAddress &&
+              <div className="collector"><span>Collector<br/>Sale</span></div>
+          }
+
           {!owned && type === "Pack" && <PackButton />}
+          {!owned && type === "Pack" && dappy.sellerAddress &&
+            <div className="collector"><span>Collector<br/>Sale</span></div>            
+          }
         </>
       }
 

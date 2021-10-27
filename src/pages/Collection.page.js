@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect} from 'react'
 import DappyList from '../components/DappyList'
 import Header from '../components/Header'
 import { useUser } from '../providers/UserProvider'
@@ -8,6 +8,8 @@ import BreedPanel from '../components/BreedPanel.comp'
 
 export default function Collection() {
   const { collection, createCollection, deleteCollection, userDappies } = useUser()
+
+  useEffect( () => {}, [userDappies])
 
   return (
     <>

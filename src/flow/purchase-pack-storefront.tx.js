@@ -65,10 +65,6 @@ transaction(adminAddress: Address, listingResourceID:UInt64, sellerAddress: Addr
     let vault <- self.vaultRef.withdraw(amount: amount)
     let nft <- self.listingRef.purchase(payment: <- vault) as! @PackNFT.NFT
 
-    // let c = nft.getIDs().length.toString()
-    // let m = c.concat(" << LENGTH")
-    // assert(false, message: m)
-
     let dappies <- nft.withdrawDappies()
 
     for key in dappies.keys {

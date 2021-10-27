@@ -22,7 +22,7 @@
 		"DappyContract": {
 			"source": "./cadence/contracts/DappyContract.cdc",
 			"aliases": {
-				"testnet": "db3d539e48a805b7"
+				"testnet": "96be1b89c734d1f4"
 			}
 		},
 		"NonFungibleToken": {
@@ -75,7 +75,12 @@
 	"deployments": {
 		"testnet": {
 			"MyWorldAdmin": [
-				"NonFungibleToken", "DappyNFT", "PackNFT", "NFTStorefront", "GalleryContract"
+				"NonFungibleToken", "DappyContract", "DappyNFT", "PackNFT", "NFTStorefront", "GalleryContract"
+			]
+		},
+		"emulator": {
+			"emulator-account": [
+				"FungibleToken", "NonFungibleToken", "FUSD", "DappyContract", "DappyNFT", "PackNFT", "NFTStorefront", "GalleryContract"
 			]
 		}
 	}

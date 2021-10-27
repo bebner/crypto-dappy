@@ -1,3 +1,49 @@
+@keyframes blink {
+    0%   {transform: scale(.8);}
+    100% {transform: scale(1.5);}
+  }
+
+  @-webkit-keyframes blink {
+  0%   {transform: scale(.8);}
+  100% {transform: scale(1.5);}
+
+}
+
+.right_panel .dappy_eye {
+  animation: blink .5s alternate 0s infinite;
+  -webkit-animation: blink .5s alternate 0s infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; transform: scale(.8);}
+  99% { opacity: 0.01;width: 100%; height: 100%; transform: scale(1.5);}
+  100% { opacity: 0;width: 0; height: 0;}
+}
+
+@-webkit-keyframes fadeOut {
+  0% { opacity: 1; transform: scale(.8);}
+  99% { opacity: 0.01;width: 100%; height: 100%; transform: scale(1.5);}
+  100% { opacity: 0;width: 0; height: 0;}
+}
+
+.baby_dappies.show {
+  animation: fadeOut 5s;
+  -webkit-animation: fadeOut 5s; 
+  animation-fill-mode: forwards;
+}
+
+.baby_dappies {
+  opacity: 0;
+}
+
+.right_panel .dappy_eye {
+animation: blink .5s alternate 0s infinite;
+-webkit-animation: blink .5s alternate 0s infinite;
+transform-origin: 50% 50%;
+}
+
+
 .dappy-list__wrapper {
   margin: 5rem auto;
   width: 80%;
@@ -7,8 +53,6 @@
   align-items: center;
   justify-content: center;
 }
-
-
 
 .left-panel__wrapper {
   position: fixed;
@@ -50,13 +94,13 @@
   flex-direction: column;
 }
 
-.left_panel .dappy_wrapper {
+.left_panel .dappy_wrapper, .baby_dappies .dappy_wrapper {
   width: 60px;
   height: 60px;  
   margin: 0 auto;
 }
 
-.left_panel svg {
+.left_panel svg, .baby_dappies svg {
   width: 100%;
   height: 100%;
 }

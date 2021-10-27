@@ -114,7 +114,7 @@ pub contract GalleryContract {
         case Type<@PackNFT.NFT>():
           let nftRef = listingPublic.borrowNFT() as! &PackNFT.NFT
           dappyCollection = nftRef.getData()
-          packName = "3-Pack"
+          packName = dappyCollection.keys.length.toString().concat("-Pack")
 
         default:
           panic("nftType is not supported: ".concat(nftType.identifier) )

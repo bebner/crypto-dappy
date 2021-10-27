@@ -39,10 +39,10 @@ pub contract DappyContract {
 
   pub resource Dappy {
     pub let id: UInt64
-    pub var data: Template    
+    pub let data: Template
 
     init(templateID: UInt32) {
-      pre {            
+      pre {
         DappyContract.templates[templateID] != nil : "Could not create dappy: template does not exist."
       }
       let dappy = DappyContract.templates[templateID]!
@@ -50,11 +50,6 @@ pub contract DappyContract {
       self.id = DappyContract.totalDappies
       self.data = Template(templateID: templateID, dna: dappy.dna, name: dappy.name)
     }
-
-    pub fun setData(data: Template) {
-      self.data = data
-    }
-    
   }
 
   pub resource Family {
@@ -310,16 +305,6 @@ pub contract DappyContract {
     }
     let el = &self.families[familyID] as! &Family
     return el.templates.contains(templateID)
-  }
-
-  pub fun mintWithData(data: Template, paymentVault: @FungibleToken.Vault): @Dappy {
-    pre {
-      paymentVault.balance >= data.price : "Could not mint dappy: payment balance insufficient."
-    }
-    destroy paymentVault
-    let dappy <- create Dappy(templateID: self.nextTemplateID - 1)
-    dappy.setData(data: data)
-    return <- dappy
   }
 
   init() {

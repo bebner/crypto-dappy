@@ -9,8 +9,9 @@ import { PURCHASE_DAPPY_STOREFRONT } from '../flow/purchase-dappy-storefront.tx'
 import { PURCHASE_PACK_STOREFRONT } from '../flow/purchase-pack-storefront.tx'
 import { REMOVE_GALLERY_LISTING } from '../flow/remove-gallery-listing.tx'
 
-export default function useUserPack() {
+const PACK_MAX_CAP = 4
 
+export default function useUserPack() {
   
   const { addTx, runningTxs } = useTxs()
 
@@ -18,26 +19,15 @@ export default function useUserPack() {
     switch (action.type) {
       case 'ADD':
         //skip if dappy exists or total dappies is 4
-        if (state.data.length >= 4) return { ...state }
+        if (state.data.length >= PACK_MAX_CAP) return { ...state }
         for (const d of state.data) {
-          if (d.id === action.payload.id) return { ...state }
+          if (d.serialNumber === action.payload.serialNumber) return { ...state }
         }
         const price = parseFloat(action.payload.price)
         return {
           ...state,
           data: [...state.data, action.payload],
           price: state.price + price
-        }
-      case 'NEW':
-        return {
-          ...state,
-          data: [...state.data, action.payload],
-          price: parseFloat(action.payload.price)
-        }
-      case 'REMOVE':
-        return {
-          ...state,
-          data: [...state.data, action.payload]
         }
       default:
         throw new Error("Error in useUserPack reducer")

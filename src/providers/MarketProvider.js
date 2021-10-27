@@ -3,6 +3,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import userUserPack from '../hooks/use-user-pack.hook'
 import useDappyPacks from '../hooks/use-dappy-packs.hook'
+import useBreedDappies from '../hooks/use-breed-dappies.hook'
 
 const UserContext = createContext()
 
@@ -27,6 +28,14 @@ export default function MarketProvider({ children }) {
         fetchPackDetails
     } = useDappyPacks()
 
+    const {
+        data: mates,
+        addMate, 
+        breedDappies
+    } = useBreedDappies()
+
+
+
 
     return (
         <UserContext.Provider
@@ -42,7 +51,10 @@ export default function MarketProvider({ children }) {
                 dappyPacks,
                 fetchDappiesOfPack, 
                 mintFromPack, 
-                fetchPackDetails
+                fetchPackDetails,
+                mates,
+                addMate, 
+                breedDappies
             }}>
             <DndProvider backend={HTML5Backend}>
                 {children}

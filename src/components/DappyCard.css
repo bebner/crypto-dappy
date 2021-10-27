@@ -1,5 +1,5 @@
 .dappy-card__draggable {
-  draggable: true;
+  opacity: 1;
 }
 
 .dappy-card__border {
@@ -42,6 +42,7 @@
   opacity: .5;
 }
 
+
 .collected {
   position: absolute;
   top: 5.5rem;
@@ -53,6 +54,47 @@
   mix-blend-mode: screen; /* This makes the cutout text possible */
   font-family: "Monument Bold";
   box-shadow: .5rem .5rem 1rem rgba(0,0,0,.5);
+}
+
+.collector span {
+  display:block;
+  position:absolute;
+  z-index:2;
+  font-family: "Monument Bold";
+  font-size: 0.8rem;
+  transform: rotate(-15deg);
+  top: 1.5rem;
+}
+
+.collector {
+  top: 13rem;
+  left: -1rem;
+  mix-blend-mode: screen;
+  background: white;
+  color: black;
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  text-align: center;
+  opacity: .3;
+}
+.collector:before,
+ .collector:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 80px;
+  width: 80px;
+  background: white;
+  color: black;
+
+}
+.collector:before {
+  transform: rotate(30deg);
+}
+.collector:after {
+  transform: rotate(60deg);
 }
 
 .img-large {
