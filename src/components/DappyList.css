@@ -1,3 +1,49 @@
+@keyframes blink {
+    0%   {transform: scale(.8);}
+    100% {transform: scale(1.5);}
+  }
+
+  @-webkit-keyframes blink {
+  0%   {transform: scale(.8);}
+  100% {transform: scale(1.5);}
+
+}
+
+.right_panel .dappy_eye {
+  animation: blink .5s alternate 0s infinite;
+  -webkit-animation: blink .5s alternate 0s infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; transform: scale(.8);}
+  99% { opacity: 0.01;width: 100%; height: 100%; transform: scale(1.5);}
+  100% { opacity: 0;width: 0; height: 0;}
+}
+
+@-webkit-keyframes fadeOut {
+  0% { opacity: 1; transform: scale(.8);}
+  99% { opacity: 0.01;width: 100%; height: 100%; transform: scale(1.5);}
+  100% { opacity: 0;width: 0; height: 0;}
+}
+
+.baby_dappies.show {
+  animation: fadeOut 5s;
+  -webkit-animation: fadeOut 5s; 
+  animation-fill-mode: forwards;
+}
+
+.baby_dappies {
+  opacity: 0;
+}
+
+.right_panel .dappy_eye {
+animation: blink .5s alternate 0s infinite;
+-webkit-animation: blink .5s alternate 0s infinite;
+transform-origin: 50% 50%;
+}
+
+
 .dappy-list__wrapper {
   margin: 5rem auto;
   width: 80%;
@@ -6,4 +52,73 @@
   justify-items: center;
   align-items: center;
   justify-content: center;
+}
+
+.left-panel__wrapper {
+  position: fixed;
+  width: 7rem;
+  left: 0;
+  display: flex;
+  flex-direction:column;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.right-panel__wrapper {
+  position: fixed;
+  width: 7rem;
+  right: 0;
+  display: flex;
+  flex-direction:column;
+  top: 50%;
+  transform: translate(0, -50%);
+
+}
+
+.right_panel {
+  border-radius: 0.5rem;
+  border: 3px solid #600c14;
+  height: 20rem;
+  position: relative;
+  display: flex;
+  flex-direction: column; 
+}
+
+
+.left_panel {
+  border-radius: 0.5rem;
+  border: 3px solid #600c14;
+  height: 20rem;
+  position:relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.left_panel .dappy_wrapper, .baby_dappies .dappy_wrapper {
+  width: 60px;
+  height: 60px;  
+  margin: 0 auto;
+}
+
+.left_panel svg, .baby_dappies svg {
+  width: 100%;
+  height: 100%;
+}
+
+.input-bottom {
+  margin-top:auto;  
+}
+
+.input-bottom input {
+  display: block;
+  margin: .3rem;
+  width: 5rem;
+}
+
+input[type=number] {
+  text-align:right;
+}
+
+.btn-bottom {
+  margin-top:.5rem;
 }

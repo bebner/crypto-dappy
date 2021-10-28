@@ -1,11 +1,12 @@
 import { ULTRARARE } from "../config/dappies.config"
 
 export class Pack {
-  constructor(id, name, price) {
+  constructor(id, name, price, sellerAddress) {
     this._id = id
     this.name = name
     this.dappies = []
     this.price = price
+    this.sellerAddress = sellerAddress
   }
 
   get rarity() {
@@ -17,7 +18,11 @@ export class Pack {
   }
 
   get id() {
-    return `Pack${this._id}`;
+    return this.sellerAddress ? 
+    `UserPack${this._id}`
+    :
+    `Pack${this._id}` 
+
   }
 
   get size() {
@@ -25,6 +30,9 @@ export class Pack {
   }
 
   get image() {
-    return `${process.env.PUBLIC_URL}/assets/${this.id}.png`
+    return this.sellerAddress ? 
+    `${process.env.PUBLIC_URL}/assets/Pack4.png`
+      :
+    `${process.env.PUBLIC_URL}/assets/${this.id}.png`
   }
 }

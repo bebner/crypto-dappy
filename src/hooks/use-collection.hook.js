@@ -4,6 +4,7 @@ import { mutate, query, tx } from '@onflow/fcl'
 import { CHECK_COLLECTION } from '../flow/check-collection.script'
 import { DELETE_COLLECTION } from '../flow/delete-collection.tx'
 import { CREATE_COLLECTION } from '../flow/create-collection.tx'
+
 import { useTxs } from '../providers/TxProvider'
 
 export default function useCollection(user) {
@@ -31,27 +32,47 @@ export default function useCollection(user) {
   }, [])
 
   const createCollection = async () => {
+
     let res = await mutate({
       cadence: CREATE_COLLECTION,
-      limit: 55
-
+      limit: 200
     })
     addTx(res)
     await tx(res).onceSealed()
+
     setCollection(true)
+
   }
 
   const deleteCollection = async () => {
+
+    // import { LIST_USER_DAPPIES_IDS } from '../flow/list-user-dappies-ids.script'
+    // console.log("THIS IS A TEST")
+    // try {
+    //   let res = await query({
+    //     cadence: LIST_USER_DAPPIES_IDS,
+    //     args: (arg, t) => [arg(user?.addr, t.Address)]
+    //   })      
+    //   console.log(res)
+    // } catch (err) {
+    //   console.err(err, err.stack)
+    // }    
+    // console.log("THIS IS A TEST")
+    // return
+
     try {
+      
       let res = await mutate({
         cadence: DELETE_COLLECTION,
         limit: 75
       })
       addTx(res)
       await tx(res).onceSealed()
+
       setCollection(false)
+
     } catch (err) {
-      console.log(err)
+      console.error(err, err.stack)
     }
   }
 

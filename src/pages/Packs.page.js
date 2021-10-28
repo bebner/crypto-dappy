@@ -16,7 +16,7 @@ export default function Packs() {
         subtitle={<>Join the <span className="highlight">pack drop</span> to get more dappies</>}
       />
       <ErrorLoadingRenderer loading={loading} error={error}>
-        <DappyList dappies={packs.map(p => new Pack(p?.familyID, p?.name))} store />
+        <DappyList dappies={packs.map(p => new Pack(p?.familyID, p?.name, p?.price, p?.sellerAddress))} store />
       </ErrorLoadingRenderer>
     </>
   )

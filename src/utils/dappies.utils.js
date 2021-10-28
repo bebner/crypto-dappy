@@ -103,7 +103,7 @@ export const createThemedDNA = (rarity, base_color, full_random, theme) => {
   }
 
   dna += createRandomNumber(rarity)
-
+  
   return dna
 }
 
@@ -116,6 +116,7 @@ export const generateDappies = (dappies = DEFAULT_DAPPIES) => {
       price: calculatePrice(d?.dna?.length)
     }
   })
+
   return generatedDappies
 }
 

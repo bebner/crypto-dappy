@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react'
 import { mutate, query, tx } from '@onflow/fcl'
 
 import { LIST_USER_DAPPIES } from '../flow/list-user-dappies.script'
+
 import { MINT_DAPPY } from '../flow/mint-dappy.tx'
 import { userDappyReducer } from '../reducer/userDappyReducer'
 import { useTxs } from '../providers/TxProvider'
@@ -9,33 +10,36 @@ import DappyClass from '../utils/DappyClass'
 
 export default function useUserDappies(user, collection, getFUSDBalance) {
   const [state, dispatch] = useReducer(userDappyReducer, {
-    oading: false,
+    loading: false,
     error: false,
     data: []
   })
   const { addTx, runningTxs } = useTxs()
 
-  useEffect(() => {
-    const fetchUserDappies = async () => {
-      dispatch({ type: 'PROCESSING' })
-      try {
-        let res = await query({
-          cadence: LIST_USER_DAPPIES,
-          args: (arg, t) => [arg(user?.addr, t.Address)]
-        })
-        let mappedDappies = []
+  const fetchUserDappies = async () => {
+    dispatch({ type: 'PROCESSING' })
+    try {
+      let res = await query({
+        cadence: LIST_USER_DAPPIES,
+        args: (arg, t) => [arg(user?.addr, t.Address)]
+      })
 
-        for (let key in res) {
-          const element = res[key]
-          let dappy = new DappyClass(element.templateID, element.dna, element.name, element.price, key)
-          mappedDappies.push(dappy)
-        }
+      let mappedDappies = []
 
-        dispatch({ type: 'SUCCESS', payload: mappedDappies })
-      } catch (err) {
-        dispatch({ type: 'ERROR' })
+      for (let key in res) {
+        const element = res[key]
+        const serialNumber = parseInt(key)
+        let dappy = new DappyClass(element.templateID, element.dna, element.name, element.price, serialNumber)
+        mappedDappies.push(dappy)
       }
+      dispatch({ type: 'SUCCESS', payload: mappedDappies })
+    } catch (err) {
+      dispatch({ type: 'ERROR' })
+      console.log(err)
     }
+  }
+  
+  useEffect(() => {
     fetchUserDappies()
     //eslint-disable-next-line
   }, [])
@@ -57,7 +61,6 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
       })
       addTx(res)
       await tx(res).onceSealed()
-      await addDappy(templateID)
       await getFUSDBalance()
     } catch (error) {
       console.log(error)
@@ -70,9 +73,10 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
         cadence: LIST_USER_DAPPIES,
         args: (arg, t) => [arg(user?.addr, t.Address)]
       })
+      // TODO: if serialNumber is missing, need to prompt user to refresh
       const dappies = Object.values(res)
       const dappy = dappies.find(d => d?.templateID === templateID)
-      const newDappy = new DappyClass(dappy.templateID, dappy.dna, dappy.name)
+      const newDappy = new DappyClass(dappy.templateID, dappy.dna, dappy.name, dappy.price, dappy.serialNumber)
       dispatch({ type: 'ADD', payload: newDappy })
     } catch (err) {
       console.log(err)
@@ -101,6 +105,7 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
     ...state,
     mintDappy,
     addDappy,
-    batchAddDappies
+    batchAddDappies,
+    fetchUserDappies
   }
 }

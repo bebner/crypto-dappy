@@ -35,6 +35,14 @@
   justify-content: center;
 }
 
+.btn-storefront {
+  width: 60%;
+  margin: 0 auto;
+  display: flex; 
+  justify-content: center;
+  border: solid darkgreen 2px;
+}
+
 .btn-icon {
   font-size: 1.2rem; 
   margin-right: .2rem

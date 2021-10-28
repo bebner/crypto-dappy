@@ -6,7 +6,6 @@
 		}
 	},
 	"contracts": {
-		"DappyContract": "./cadence/contracts/DappyContract.cdc",
 		"FUSD": {
 			"source": "./cadence/contracts/FUSD.cdc",
 			"aliases": {
@@ -19,7 +18,44 @@
 				"testnet": "9a0766d93b6608b7",
 				"emulator": "ee82856bf20e2aa6"
 			}
+		},
+		"DappyContract": {
+			"source": "./cadence/contracts/DappyContract.cdc",
+			"aliases": {
+				"testnet": "96be1b89c734d1f4"
+			}
+		},
+		"NonFungibleToken": {
+			"source": "./cadence/contracts/NonFungibleToken.cdc",
+			"aliases": {
+				"testnet": "96be1b89c734d1f4"
+			}
+		},
+		"NFTStorefront": {
+			"source": "./cadence/contracts/NFTStorefront.cdc",
+			"aliases": {
+				"testnet": "96be1b89c734d1f4"
+			}
+		},
+		"DappyNFT": {
+			"source": "./cadence/contracts/DappyNFT.cdc",
+			"aliases": {
+				"testnet": "96be1b89c734d1f4"
+			}
+		},
+		"PackNFT": {
+			"source": "./cadence/contracts/PackNFT.cdc",
+			"aliases": {
+				"testnet": "96be1b89c734d1f4"
+			}
+		},
+		"GalleryContract": {
+			"source": "./cadence/contracts/GalleryContract.cdc",
+			"aliases": {
+				"testnet": "96be1b89c734d1f4"
+			}
 		}
+
 	},
 	"networks": {
 		"emulator": "127.0.0.1:3569",
@@ -30,7 +66,22 @@
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
 			"key": "ae1b44c0f5e8f6992ef2348898a35e50a8b0b9684000da8b1dade1b3bcd6ebee"
+		},
+		"MyAdmin": {
+			"address": "f8d6e0586b0a20c7",
+			"key": "ae1b44c0f5e8f6992ef2348898a35e50a8b0b9684000da8b1dade1b3bcd6ebee"
 		}
 	},
-	"deployments": {}
+	"deployments": {
+		"testnet": {
+			"MyAdmin": [
+				"NonFungibleToken", "DappyContract", "DappyNFT", "PackNFT", "NFTStorefront", "GalleryContract"
+			]
+		},
+		"emulator": {
+			"emulator-account": [
+				"FungibleToken", "NonFungibleToken", "FUSD", "DappyContract", "DappyNFT", "PackNFT", "NFTStorefront", "GalleryContract"
+			]
+		}
+	}
 }
