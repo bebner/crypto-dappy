@@ -72,7 +72,7 @@ export default function useCollection(user) {
       setCollection(false)
 
     } catch (err) {
-      console.log(err)
+      console.error(err, err.stack)
     }
   }
 

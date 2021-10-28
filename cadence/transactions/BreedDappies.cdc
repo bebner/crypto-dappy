@@ -84,7 +84,7 @@ transaction (maleID: UInt64, femaleID: UInt64) {
     fun gen(_ a: [String], _ b: [String]): String
     {
       // let eye = [ maleDNA[maleDNA.length - 1 ],  femaleDNA[femaleDNA.length - 1 ] ] [ luck(2) ]
-      let eye = [ a.removeLast(),  b.removeLast()] [ luck(2) ]
+      var eye = [ a.removeLast(),  b.removeLast()] [ luck(2) ]
       var dna: String = ""
 
       var baseDNA = combo(a, b)
@@ -97,6 +97,11 @@ transaction (maleID: UInt64, femaleID: UInt64) {
         dna = dna.concat(".")
         i = i + 1
       }
+
+      if eye.length < 2 {
+        eye = min( stripes-1, UInt64(eye.decodeHex()[0]) ).toString()
+      } // Fix white eye
+
       dna = dna.concat(eye)
       return dna
     }

@@ -32,7 +32,6 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
         let dappy = new DappyClass(element.templateID, element.dna, element.name, element.price, serialNumber)
         mappedDappies.push(dappy)
       }
-
       dispatch({ type: 'SUCCESS', payload: mappedDappies })
     } catch (err) {
       dispatch({ type: 'ERROR' })
@@ -42,7 +41,6 @@ export default function useUserDappies(user, collection, getFUSDBalance) {
   
   useEffect(() => {
     fetchUserDappies()
-    console.log("FETCH")
     //eslint-disable-next-line
   }, [])
 
