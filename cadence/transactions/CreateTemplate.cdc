@@ -1,6 +1,6 @@
 import DappyContract from "../contracts/DappyContract.cdc"
 
-transaction(dna: String, name: String) {
+transaction(dna: DappyContract.Dna, name: String, ipfsHash: String) {
 
   var adminRef: &DappyContract.Admin
 
@@ -9,7 +9,7 @@ transaction(dna: String, name: String) {
   }
 
   execute {
-    self.adminRef.createTemplate(dna: dna, name: name)
+    self.adminRef.createTemplate(dna: dna, name: name, ipfsHash: ipfsHash)
   }
 }
  
