@@ -11,7 +11,8 @@ export const getDappyAdminAddress = async () => getAccountAddress("DappyAdmin")
 export const deployDappyContract = async () => {
   const DappyAdmin = await getAccountAddress("DappyAdmin")
   await mintFlow(DappyAdmin, "10.0")
-  const addressMap = { FungibleToken: "0xee82856bf20e2aa6" }
+  const addressMap = { FungibleToken: "0xee82856bf20e2aa6", MetadataViews: DappyAdmin }
+  await deployContractByName({to: DappyAdmin, name: "MetadataViews"});
   await deployContractByName({ to: DappyAdmin, name: "DappyContract", addressMap })
 }
 
