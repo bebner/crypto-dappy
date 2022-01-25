@@ -19,6 +19,9 @@
 				"testnet": "9a0766d93b6608b7",
 				"emulator": "ee82856bf20e2aa6"
 			}
+		},
+		"MetadataViews": {
+			"source" : "./cadence/contracts/MetadataViews.cdc"
 		}
 	},
 	"networks": {

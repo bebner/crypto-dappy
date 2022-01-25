@@ -15,11 +15,11 @@ export const deployDappyContract = async () => {
   await deployContractByName({ to: DappyAdmin, name: "DappyContract", addressMap })
 }
 
-export const createDappyTemplate = async (dappy) => {
+export const createDappyTemplate = async (dappy, ipfsHash) => {
   const DappyAdmin = await getDappyAdminAddress()
   const signers = [DappyAdmin]
   const name = "CreateTemplate"
-  const args = [dappy.dna, dappy.name]
+  const args = [dappy.dna, dappy.name, ipfsHash]
   await sendTransaction({ name, signers, args })
 }
 

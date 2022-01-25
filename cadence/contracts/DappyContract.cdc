@@ -1,9 +1,12 @@
 
 import FungibleToken from "./FungibleToken.cdc"
+import MetadataViews from "./MetadataViews.cdc"
 
 pub contract DappyContract {
   access(self) var templates: {UInt32: Template}
   access(self) var families: @{UInt32: Family}
+  // mapping [name] -> ipfs Hash
+  access(self) var images: {String: String}
   
   pub var nextTemplateID: UInt32
   pub var nextFamilyID: UInt32
@@ -13,31 +16,51 @@ pub contract DappyContract {
   pub let CollectionPublicPath: PublicPath
   pub let AdminStoragePath: StoragePath
 
+  pub enum Dna : UInt8 {
+    pub case ThereeStrips
+    pub case FourStrips
+    pub case FiveStrips
+  }
+
+  pub fun dnaToString(_ dna: Dna): String {
+      switch dna {
+        case Dna.ThereeStrips:
+          return "3 Strips"
+        case Dna.FourStrips:
+          return "4 Strips"
+        case Dna.FiveStrips:
+          return "5 Strips"
+      } 
+      return ""
+  }
+
   pub struct Template {
     pub let templateID: UInt32
-    pub let dna: String
+    pub let dna: Dna
     pub let name: String
     pub let price: UFix64
 
-    init(templateID: UInt32, dna: String, name: String) {
+    init(templateID: UInt32, dna: Dna, name: String) {
       self.templateID = templateID
       self.dna = dna
       self.name = name
-      self.price = self._calculatePrice(dna: dna.length)
+      self.price = self._calculatePrice(dna: dna)
     }
 
-    access(self) fun _calculatePrice(dna: Int): UFix64 {
-      if dna >= 31 {
-        return 21.0
-      } else if dna >= 25 {
-        return 14.0
-      } else {
-        return 7.0
-      }
+    access(self) fun _calculatePrice(dna: Dna): UFix64 {
+      switch dna {
+        case Dna.ThereeStrips:
+          return 21.0
+        case Dna.FourStrips:
+          return 14.0
+        case Dna.FiveStrips:
+          return 7.0
+      } 
+      return 0.0
     }
   }
 
-  pub resource Dappy {
+  pub resource Dappy: MetadataViews.Resolver {
     pub let id: UInt64
     pub let data: Template
 
@@ -50,6 +73,48 @@ pub contract DappyContract {
       self.id = DappyContract.totalDappies
       self.data = Template(templateID: templateID, dna: dappy.dna, name: dappy.name)
     }
+
+    pub fun name(): String {
+      return DappyContract.dnaToString(self.data.dna)
+        .concat(" ")
+        .concat(self.data.name)
+    }
+
+    pub fun description(): String {
+      return "A "
+        .concat(DappyContract.dnaToString(self.data.dna).toLower())
+        .concat(" ")
+        .concat(self.data.name)
+        .concat(" with serial number ")
+        .concat(self.id.toString())
+    }
+    
+    pub fun imageCID(): String {
+      return DappyContract.images[self.data.name]!
+    }
+
+    pub fun getViews(): [Type] {
+      return [
+          Type<MetadataViews.Display>()
+        ]
+    }
+
+    pub fun resolveView(_ view: Type): AnyStruct? {
+      switch view {
+        case Type<MetadataViews.Display>():
+          return MetadataViews.Display(
+            name: self.name(),
+            description: self.description(),
+            thumbnail: MetadataViews.IPFSFile(
+              cid: self.imageCID(), 
+              path: "sm.png"
+            )
+          )
+      }
+
+      return nil
+    }
+
   }
 
   pub resource Family {
@@ -106,15 +171,16 @@ pub contract DappyContract {
   }
 
   pub resource Admin {
-    pub fun createTemplate(dna: String, name: String): UInt32 {
+    pub fun createTemplate(dna: Dna, name: String, ipfsHash: String): UInt32 {
       pre {
-        dna.length > 0 : "Could not create template: dna is required."
         name.length > 0 : "Could not create template: name is required."
+        ipfsHash.length > 0 : "Could not create template: invalid ipfs hash" 
       }
-      let newDappyID = DappyContract.nextTemplateID
-      DappyContract.templates[newDappyID] = Template(templateID: newDappyID, dna: dna, name: name)
+      let newTemplateId = DappyContract.nextTemplateID
+      DappyContract.templates[newTemplateId] = Template(templateID: newTemplateId, dna: dna, name: name)
       DappyContract.nextTemplateID = DappyContract.nextTemplateID + 1
-      return newDappyID
+      DappyContract.images[name] = ipfsHash
+      return newTemplateId
     }
 
     pub fun destroyTemplate(dappyID: UInt32) {
@@ -148,7 +214,14 @@ pub contract DappyContract {
   pub resource interface CollectionPublic {
     pub fun deposit(token: @Dappy)
     pub fun getIDs(): [UInt64]
-    pub fun listDappies(): {UInt64: Template}
+    pub fun borrowDappy(id: UInt64): &DappyContract.Dappy? {
+      // If the result isn't nil, the id of the returned reference
+      // should be the same as the argument to the function
+      post {
+        (result == nil) || (result?.id == id):
+          "Cannot borrow Dappy reference: The ID of the returned reference is incorrect"
+      }
+    }
   }
 
   pub resource interface Provider {
@@ -186,13 +259,14 @@ pub contract DappyContract {
       return self.ownedDappies.keys
     }
 
-    pub fun listDappies(): {UInt64: Template} {
-      var dappyTemplates: {UInt64:Template} = {}
-      for key in self.ownedDappies.keys {
-        let el = &self.ownedDappies[key] as &Dappy
-        dappyTemplates.insert(key: el.id, el.data)
+    // borrowDappy
+    pub fun borrowDappy(id: UInt64): &DappyContract.Dappy? {
+      if self.ownedDappies[id] != nil {
+          let ref = &self.ownedDappies[id] as auth &DappyContract.Dappy
+          return ref
+      } else {
+          return nil
       }
-      return dappyTemplates
     }
 
     destroy() {
@@ -317,6 +391,8 @@ pub contract DappyContract {
     self.AdminStoragePath = /storage/DappyAdmin
     self.account.save<@Admin>(<- create Admin(), to: self.AdminStoragePath)
     self.families <- {}
+    self.images = {}
   }
 
 }
+ 
