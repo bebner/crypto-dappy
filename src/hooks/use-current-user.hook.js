@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import * as fcl from "@onflow/fcl";
 
 export default function useCurrentUser() {
-  const [user, setUser] = useState({ loggedIn: false })
+  const [user, setUser] = useState({})
 
   const tools = {
-    logIn: () => setUser({ loggedIn: true, addr: "MY_ADDRESS" }),
-    logOut: () => setUser({ loggedIn: false }),
+    logIn: fcl.authenticate,
+    logOut: fcl.unauthenticate,
   }
 
 
