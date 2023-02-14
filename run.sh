@@ -11,4 +11,5 @@ export REACT_APP_FT_CONTRACT=${FT_CONTRACT}
 export REACT_APP_FUSD_CONTRACT=${FUSD_CONTRACT}
 export REACT_APP_DAPPY_CONTRACT=${DAPPY_CONTRACT}
 
+//For users using Node version >17 run the floowing command : "set NODE_OPTIONS=--openssl-legacy-provider"
 npm run start
