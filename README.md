@@ -7,6 +7,8 @@
 
 ---
 
+<b>Alert:For users with node versions >17, run this command in CMD : "set NODE_OPTIONS=--openssl-legacy-provider" before "npm run start" because the react-scripts of the current project is built with node version 17 .</b><br>
+<b>Ref : <a href="https://www.newline.co/@kchan/how-to-fix-the-error-errorerror0308010cdigital-envelope-routinesunsupported--0f8d3f17">Link</a></b>
 ## What's CryptoDappy?
 
 CryptoDappy is the fastest way to get started with blockchain development on Flow. Our [learning hub](https://d3em6h2gy0mctd.cloudfront.net/) offers various mission-based scenarios, in which you will build your own full-stack blockchain application that allows for querying, minting and transfering NFTs. You will also learn how to sell these NFTs in packs for a given price of FUSD (Flow's first stablecoin). The NFTs of this application are Dappies, cute little monsters that come with different stripes, rarities and colors. 
